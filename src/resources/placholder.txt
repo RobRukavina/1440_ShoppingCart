@@ -1,0 +1,2 @@
+Images and other required resources such as txt files we read and write from/to go in the resources folder 
+and NOWHERE ELSE unless there is some GOOD reason to make an exception which we can discuss if/when the time arises
