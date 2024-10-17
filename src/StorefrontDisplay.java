@@ -41,7 +41,7 @@ public class StorefrontDisplay extends JFrame {
 		setBounds(100, 100, 800, 600);
 		getContentPane().setLayout(new BorderLayout(0, 0));
 
-		JLabel shopTitle = new JLabel("LE COFFEE BEAN");
+		JLabel shopTitle = new JLabel("LE BEAN ZONE");
 		shopTitle.setPreferredSize(new Dimension(600, 50));
 		shopTitle.setOpaque(true);
 		shopTitle.setBackground(Color.BLUE);
@@ -60,7 +60,7 @@ public class StorefrontDisplay extends JFrame {
 
 		JPanel beverageItemContainer = new JPanel();
 		beverageContainer.add(beverageItemContainer, BorderLayout.CENTER);
-		beverageItemContainer.setLayout(new GridLayout(2, 2, 0, 0));
+		beverageItemContainer.setLayout(new GridLayout(0, 3, 0, 0));
 
 		// Example product data
 		products = new ArrayList<>();
@@ -68,6 +68,9 @@ public class StorefrontDisplay extends JFrame {
 		products.add(new Snack("Cookies", "cookies.png"));
 		products.add(new Beverage("Soda", "soda.png", 32));
 		products.add(new Snack("Candy", "candy.png"));
+		products.add(new Beverage("Fruit Juice", "fruitjuice.png", 12));
+		products.add(new Beverage("Fruit Juice", "fruitjuice.png", 12));
+		products.add(new Beverage("Fruit Juice", "fruitjuice.png", 12));
 		products.add(new Beverage("Fruit Juice", "fruitjuice.png", 12));
 		products.add(new Snack("Popcorn", "popcorn.png"));
 
@@ -81,7 +84,7 @@ public class StorefrontDisplay extends JFrame {
 		snackContainer.add(snackTitle, BorderLayout.NORTH);
 
 		JPanel snackItemContainer = new JPanel();
-		snackItemContainer.setLayout(new GridLayout(2, 3, 10, 10));
+		snackItemContainer.setLayout(new GridLayout(0, 3, 10, 10));
 
 		for (Product product : products) {
 			JPanel productItem = createProductItem(product);
