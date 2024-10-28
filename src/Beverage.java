@@ -8,8 +8,8 @@ public class Beverage extends Product {
 	 */
 	private int size = -1;
 
-	public Beverage(String name, String image, int size) {
-		super(name, image);
+	public Beverage(String name, String image, double price, int stock, int size) {
+		super(name, image, price, stock);
 		this.setSize(size);
 	}
 
