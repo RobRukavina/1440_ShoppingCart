@@ -1,2 +1,16 @@
 Images and other required resources such as txt files we read and write from/to go in the resources folder 
 and NOWHERE ELSE unless there is some GOOD reason to make an exception which we can discuss if/when the time arises
+
+Drinks:
+Baja Blast, 20 ounce/591.471 ml, $2.28
+Coca-Cola, 8 ounce/236.588 ml, $1.09
+Fiji Water, 16.907 ounce/500 ml, $1.62
+Powerade, 16.907 ounce/500 ml, $2.63
+White Monster, 16 ounce/473.176 ml, $2.38
+
+Snacks:
+CLIF Bar, 2.4 ounce/68 g, $1.54
+Goldfish, 6.6 ounce/187.107 g, $2.69
+Grandma's Chocolate Chip Cookie, 2.5 ounce/70.8 g, $1.05
+Lays Sour Cream and Onion Chips, 7.75 ounce/219.7 g, $3.50
+Trail Mix, 2.01 ounce/57 g, $0.93
