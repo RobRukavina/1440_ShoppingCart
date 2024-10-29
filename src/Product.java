@@ -51,4 +51,7 @@ public class Product {
 		return this.image;
 	}
 	
+	public double getPrice() {
+		return price;
+	}
 }
