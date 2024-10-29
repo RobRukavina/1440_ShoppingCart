@@ -64,15 +64,18 @@ public class StorefrontDisplay extends JFrame {
 
 		// Example product data
 		products = new ArrayList<>();
-		products.add(new Snack("Chips", "chips.png"));
-		products.add(new Snack("Cookies", "cookies.png"));
-		products.add(new Beverage("Soda", "soda.png", 32));
-		products.add(new Snack("Candy", "candy.png"));
-		products.add(new Beverage("Fruit Juice", "fruitjuice.png", 12));
-		products.add(new Beverage("Fruit Juice", "fruitjuice.png", 12));
-		products.add(new Beverage("Fruit Juice", "fruitjuice.png", 12));
-		products.add(new Beverage("Fruit Juice", "fruitjuice.png", 12));
-		products.add(new Snack("Popcorn", "popcorn.png"));
+		
+		
+		// Rebuild this array with the appropriate arguments now that they have been updated.
+//		products.add(new Snack("Chips", "chips.png"));
+//		products.add(new Snack("Cookies", "cookies.png"));
+//		products.add(new Beverage("Soda", "soda.png", 32));
+//		products.add(new Snack("Candy", "candy.png"));
+//		products.add(new Beverage("Fruit Juice", "fruitjuice.png", 12));
+//		products.add(new Beverage("Fruit Juice", "fruitjuice.png", 12));
+//		products.add(new Beverage("Fruit Juice", "fruitjuice.png", 12));
+//		products.add(new Beverage("Fruit Juice", "fruitjuice.png", 12));
+//		products.add(new Snack("Popcorn", "popcorn.png"));
 
 		JPanel snackContainer = new JPanel();
 		productContainer.add(snackContainer);

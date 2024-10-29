@@ -4,8 +4,8 @@
 
 public class Snack extends Product {
 
-	public Snack(String name, String image, double price) {
-		super(name, image, price);
+	public Snack(String name, String image, double price, int stock) {
+		super(name, image, price, stock);
 	}
 
 }
