@@ -1,11 +1,16 @@
+package main;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.GridLayout;
+import java.awt.Toolkit;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -16,6 +21,7 @@ public class StorefrontDisplay extends JFrame {
 	private static final long serialVersionUID = 1L;
 
 	private List<Product> products;
+	private ImageIcon productIcon;
 
 	/**
 	 * Launch the application.
@@ -38,7 +44,13 @@ public class StorefrontDisplay extends JFrame {
 	 */
 	public StorefrontDisplay() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 800, 600);
+
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		int width = (int) screenSize.getWidth();
+		int height = (int) screenSize.getHeight();
+
+		setExtendedState(JFrame.MAXIMIZED_BOTH); // full screen
+		setBounds(100, 100, width, height);
 		getContentPane().setLayout(new BorderLayout(0, 0));
 
 		JLabel shopTitle = new JLabel("LE BEAN ZONE");
@@ -50,6 +62,8 @@ public class StorefrontDisplay extends JFrame {
 		getContentPane().add(shopTitle, BorderLayout.NORTH);
 
 		JPanel productContainer = createProductContainer();
+		productContainer.setPreferredSize(new Dimension((int) (width * 0.7), height));
+
 		getContentPane().add(productContainer, BorderLayout.WEST);
 
 		JPanel beverageContainer = createBeverageContainer();
@@ -64,18 +78,24 @@ public class StorefrontDisplay extends JFrame {
 
 		// Example product data
 		products = new ArrayList<>();
-		
-		
-		// Rebuild this array with the appropriate arguments now that they have been updated.
-//		products.add(new Snack("Chips", "chips.png"));
-//		products.add(new Snack("Cookies", "cookies.png"));
-//		products.add(new Beverage("Soda", "soda.png", 32));
-//		products.add(new Snack("Candy", "candy.png"));
-//		products.add(new Beverage("Fruit Juice", "fruitjuice.png", 12));
-//		products.add(new Beverage("Fruit Juice", "fruitjuice.png", 12));
-//		products.add(new Beverage("Fruit Juice", "fruitjuice.png", 12));
-//		products.add(new Beverage("Fruit Juice", "fruitjuice.png", 12));
-//		products.add(new Snack("Popcorn", "popcorn.png"));
+
+		// Snacks
+		products.add(new Snack("Banana Bread", "bananabread.png", 5.99, 15));
+		products.add(new Snack("Blueberry Muffin", "blueberrymuffin.png", 4.99, 12));
+		products.add(new Snack("Chocolate Muffin", "chocolatemuffin.png", 4.99, 10));
+		products.add(new Snack("Croissant", "croissant.png", 3.99, 18));
+		products.add(new Snack("Panini", "panini.png", 6.49, 14));
+		products.add(new Snack("Cookies", "cookies.png", 2.99, 20));
+		products.add(new Snack("Cake Slice", "cakeslice.png", 5.49, 10));
+
+		// Beverages
+		products.add(new Beverage("Boba Tea", "bobatea.png", 4.49, 12, 16));
+		products.add(new Beverage("Frappuccino", "frappuccino.png", 5.99, 15, 12));
+		products.add(new Beverage("Macchiato", "macchiato.png", 4.99, 18, 8));
+		products.add(new Beverage("Latte", "latte.png", 5.29, 20, 16));
+		products.add(new Beverage("Espresso", "espresso.png", 3.99, 10, 2));
+		products.add(new Beverage("Americano", "americano.png", 3.49, 15, 12));
+		products.add(new Beverage("Cold Brew", "coldbrew.png", 4.59, 14, 16));
 
 		JPanel snackContainer = new JPanel();
 		productContainer.add(snackContainer);
@@ -91,8 +111,17 @@ public class StorefrontDisplay extends JFrame {
 
 		for (Product product : products) {
 			JPanel productItem = createProductItem(product);
+			// System.out.println(product.getImage()); // returns bananabread.png
+			System.out.println(getClass().getResource("/resources/" + product.getImage())); // returns
+
+			URL imgPath = StorefrontDisplay.class.getResource("/resources/" + product.getImage());
+
 			if (product instanceof Snack) {
-				System.out.println("snack " + product.getName());
+//				System.out.println("snack " + product.getName());
+
+				JButton productIconBtn = new JButton();
+				productIconBtn.setIcon(new ImageIcon(imgPath));
+
 				snackItemContainer.add(productItem);
 			} else if (product instanceof Beverage) {
 				System.out.println("beverage " + product.getName());
