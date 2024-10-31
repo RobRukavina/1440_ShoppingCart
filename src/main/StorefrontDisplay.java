@@ -1,10 +1,15 @@
 package main;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.LayoutManager;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +20,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
 
 public class StorefrontDisplay extends JFrame {
 
@@ -22,6 +28,8 @@ public class StorefrontDisplay extends JFrame {
 
 	private List<Product> products;
 	private ImageIcon productIcon;
+	private final int width = 1200;
+	private final int height = 800;
 
 	/**
 	 * Launch the application.
@@ -45,26 +53,23 @@ public class StorefrontDisplay extends JFrame {
 	public StorefrontDisplay() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+		// setExtendedState(JFrame.MAXIMIZED_BOTH); // full screen
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		int width = (int) screenSize.getWidth();
-		int height = (int) screenSize.getHeight();
+		System.out.println(screenSize);
 
-		setExtendedState(JFrame.MAXIMIZED_BOTH); // full screen
 		setBounds(100, 100, width, height);
 		getContentPane().setLayout(new BorderLayout(0, 0));
+		getContentPane().setPreferredSize(new Dimension(width, height));
 
-		JLabel shopTitle = new JLabel("LE BEAN ZONE");
-		shopTitle.setPreferredSize(new Dimension(600, 50));
-		shopTitle.setOpaque(true);
-		shopTitle.setBackground(Color.BLUE);
-
+		JLabel shopTitle = titleLabel();
 		shopTitle.setHorizontalAlignment(SwingConstants.CENTER);
 		getContentPane().add(shopTitle, BorderLayout.NORTH);
 
 		JPanel productContainer = createProductContainer();
 		productContainer.setPreferredSize(new Dimension((int) (width * 0.7), height));
-
 		getContentPane().add(productContainer, BorderLayout.WEST);
+
+		LayoutManager itemContainerLayout = new GridLayout(0, 3, 50, 5); // layout dimensions
 
 		JPanel beverageContainer = createBeverageContainer();
 		productContainer.add(beverageContainer);
@@ -74,7 +79,7 @@ public class StorefrontDisplay extends JFrame {
 
 		JPanel beverageItemContainer = new JPanel();
 		beverageContainer.add(beverageItemContainer, BorderLayout.CENTER);
-		beverageItemContainer.setLayout(new GridLayout(0, 3, 0, 0));
+		beverageItemContainer.setLayout(new GridLayout(0, 3, 50, 5));
 
 		// Example product data
 		products = new ArrayList<>();
@@ -82,64 +87,83 @@ public class StorefrontDisplay extends JFrame {
 		// Snacks
 		products.add(new Snack("Banana Bread", "bananabread.png", 5.99, 15));
 		products.add(new Snack("Blueberry Muffin", "blueberrymuffin.png", 4.99, 12));
-		products.add(new Snack("Chocolate Muffin", "chocolatemuffin.png", 4.99, 10));
+		products.add(new Snack("Choccy Muffin", "chocolatemuffin.png", 4.99, 10));
 		products.add(new Snack("Croissant", "croissant.png", 3.99, 18));
-		products.add(new Snack("Panini", "panini.png", 6.49, 14));
-		products.add(new Snack("Cookies", "cookies.png", 2.99, 20));
-		products.add(new Snack("Cake Slice", "cakeslice.png", 5.49, 10));
+		products.add(new Snack("Paninini", "panini.png", 6.49, 14));
+//		products.add(new Snack("Cookies", "cookies.png", 2.99, 20));// DOESNT EXIST
+//		products.add(new Snack("Cake Slice", "cakeslice.png", 5.49, 10)); //DOESNT EXIST
 
 		// Beverages
-		products.add(new Beverage("Boba Tea", "bobatea.png", 4.49, 12, 16));
+		products.add(new Beverage("Boba Milk Tea", "bobatea.png", 4.49, 12, 16));
 		products.add(new Beverage("Frappuccino", "frappuccino.png", 5.99, 15, 12));
 		products.add(new Beverage("Macchiato", "macchiato.png", 4.99, 18, 8));
-		products.add(new Beverage("Latte", "latte.png", 5.29, 20, 16));
-		products.add(new Beverage("Espresso", "espresso.png", 3.99, 10, 2));
-		products.add(new Beverage("Americano", "americano.png", 3.49, 15, 12));
-		products.add(new Beverage("Cold Brew", "coldbrew.png", 4.59, 14, 16));
+		products.add(new Beverage("Black", "black.png", 5.29, 20, 16));
+		products.add(new Beverage("Latte", "cream.png", 3.99, 10, 2));
+//		products.add(new Beverage("Americano", "americano.png", 3.49, 15, 12)); // DOESNT EXIST
+//		products.add(new Beverage("Cold Brew", "coldbrew.png", 4.59, 14, 16)); // DOESNT EXIST
 
 		JPanel snackContainer = new JPanel();
-		productContainer.add(snackContainer);
 		snackContainer.setLayout(new BorderLayout(0, 0));
+		productContainer.add(snackContainer);
 
-		JLabel snackTitle = new JLabel("SNACKS");
-		snackTitle.setBackground(Color.GRAY);
-
+		JLabel snackTitle = snackLabel();
 		snackContainer.add(snackTitle, BorderLayout.NORTH);
 
 		JPanel snackItemContainer = new JPanel();
-		snackItemContainer.setLayout(new GridLayout(0, 3, 10, 10));
+		snackItemContainer.setLayout(new GridLayout(0, 3, 50, 5));
 
-		for (Product product : products) {
-			JPanel productItem = createProductItem(product);
-			// System.out.println(product.getImage()); // returns bananabread.png
-			System.out.println(getClass().getResource("/resources/" + product.getImage())); // returns
-
-			URL imgPath = StorefrontDisplay.class.getResource("/resources/" + product.getImage());
+		for (Product product : products) { // fill the snack and beverage containers
+			URL imgPath = getClass().getResource("/" + product.getImage());
+			JPanel productItem = createProductItem(product, imgPath);
 
 			if (product instanceof Snack) {
-//				System.out.println("snack " + product.getName());
-
-				JButton productIconBtn = new JButton();
-				productIconBtn.setIcon(new ImageIcon(imgPath));
-
 				snackItemContainer.add(productItem);
 			} else if (product instanceof Beverage) {
-				System.out.println("beverage " + product.getName());
 				beverageItemContainer.add(productItem);
 			}
 		}
 
 		snackContainer.add(snackItemContainer);
 
+		// TODO add a background to the contentPane - make this work
+//		StorefrontBackground bgPanel = new StorefrontBackground();
+//		bgPanel.setLayout(null);
+//		bgPanel.setBounds(0, 0, getWidth(), getHeight()); // Fill the frame
+//		bgPanel.setOpaque(true);
+
+//		getContentPane().add(bgPanel);// set bg
+
+		// SHOPPING CART
+
+		JPanel cartContainer = new JPanel();
+		cartContainer.setPreferredSize(new Dimension((int) (height * 0.3), 1000));
+
+		getContentPane().add(cartContainer);
+
 		pack();
 		setVisible(true);
 
 	}
 
+	private JLabel titleLabel() {
+		JLabel shopTitle = new JLabel("LE BEAN ZONE");
+		shopTitle.setPreferredSize(new Dimension(width, 50));
+		shopTitle.setFont(new Font("Didot", Font.BOLD, 32));
+//		shopTitle.setOpaque(true);
+		shopTitle.setBackground(new Color(100, 10, 0, 100));
+		return shopTitle;
+	}
+
+	private JLabel snackLabel() {
+		JLabel snackTitle = new JLabel("SNACKS");
+		snackTitle.setFont(new Font("Serif", Font.BOLD, 24));
+		return snackTitle;
+	}
+
 	private JLabel beverageLabel() {
 		JLabel beverageLbl = new JLabel("COFFEE");
-		beverageLbl.setOpaque(true);
-		beverageLbl.setBackground(Color.GRAY);
+		beverageLbl.setFont(new Font("Serif", Font.BOLD, 24));
+
 		return beverageLbl;
 	}
 
@@ -161,18 +185,58 @@ public class StorefrontDisplay extends JFrame {
 	 * 
 	 * @param product product object
 	 */
-	private JPanel createProductItem(Product product) {
+	private JPanel createProductItem(Product product, URL imgPath) {
 
 		JPanel productItem = new JPanel();
 		productItem.setLayout(new BorderLayout(0, 0));
 
-		JLabel productImg = new JLabel(product.getImage());
+		JButton productImg = new JButton();
+		productImg.setIcon(new ImageIcon(imgPath));
+		productImg.setOpaque(true);
+		productImg.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				addProductToCart(product);
+			}
+		});
+
 		productItem.add(productImg, BorderLayout.CENTER);
 
+		JPanel productLblContainer = new JPanel();
+		productLblContainer.setBorder(new EmptyBorder(5, 0, 5, 0));
+		productLblContainer.setLayout(new GridLayout(0, 2, 0, 0));
+
 		JLabel productLbl = new JLabel(product.getName());
-		productItem.add(productLbl, BorderLayout.SOUTH);
+		productLbl.setFont(new Font("Serif", Font.ITALIC, 14));
+
+		JButton addToCartBtn = addToCartButton(product);
+
+		productLblContainer.add(productLbl);
+		productLblContainer.add(addToCartBtn);
+
+		productItem.add(productLblContainer, BorderLayout.SOUTH);
 
 		return productItem;
+
+	}
+
+	private JButton addToCartButton(Product product) {
+		JButton addToCartBtn = new JButton();
+		addToCartBtn.setOpaque(true);
+		addToCartBtn.setFont(new Font("Serif", Font.PLAIN, 14));
+		addToCartBtn.setText("add to cart");
+		addToCartBtn.setBackground(Color.WHITE);
+		addToCartBtn.setPreferredSize(new Dimension(50, 14));
+		addToCartBtn.setBorder(new EmptyBorder(10, 0, 10, 0));
+		addToCartBtn.addActionListener(e -> addProductToCart(product));
+		return addToCartBtn;
+	}
+
+//TODO
+	protected void addProductToCart(Product product) {
+		System.out.println();
+		System.out.println("you added " + product.getName() + " to the cart");
+		System.out.println();
+		ShoppingCart.addProduct(product, product.getPrice());
 
 	}
 
