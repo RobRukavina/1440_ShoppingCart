@@ -1,6 +1,8 @@
 package main;
 
 import java.awt.BorderLayout;
+import java.util.Arrays;
+import java.util.Objects;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -25,22 +27,39 @@ public class ShoppingCart extends JPanel {
 	}
 
 	public static void addProduct(Product product, double price) {
-		if (productCount < products.length) {
-			products[productCount++] = product;
 
-//			updateTotalPrice();
-		} else {
-			System.out.println("Cannot add more products.");
+		if (productCount >= products.length) {
+			return;
 		}
+
+		Product existingProduct = Arrays.stream(products).filter(Objects::nonNull)
+				.filter(p -> p.getName().equals(product.getName())) // Match by name
+				.findFirst().orElse(null);
+
+		if (existingProduct != null) {
+
+			product.updateQty(product.getQty() + 1);
+			product.calcSubtotal();
+
+		} else {
+			products[productCount++] = product; // add to the next index
+		}
+
+//		updateTotalPrice();
+
 		printProducts();
 	}
 
+	/**
+	 * Total price of all the items in cart
+	 */
 	public static double calculateTotalPrice() {
 		double totalPrice = 0.0;
 
 		for (int i = 0; i < productCount; i++) {
-			totalPrice += products[i].getPrice();
+			totalPrice += products[i].getSubtotal();
 		}
+
 		return totalPrice;
 	}
 
@@ -54,8 +73,11 @@ public class ShoppingCart extends JPanel {
 	private static void printProducts() {
 		System.out.println("Current Products in Cart:");
 		for (int i = 0; i < productCount; i++) {
-			System.out.println(products[i].getName() + " - $" + products[i].getPrice());
+			System.out.println(products[i].getName() + "  " + products[i].getQty() + "  - $" + products[i].getPrice()
+					+ "  -  $" + products[i].getSubtotal());
 		}
+
+		System.out.println("TOTAL PRICE: " + String.format("%.2f", calculateTotalPrice()));
 	}
 
 }

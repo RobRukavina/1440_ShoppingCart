@@ -78,8 +78,9 @@ public class StorefrontDisplay extends JFrame {
 		beverageContainer.add(beverageLbl, BorderLayout.NORTH);
 
 		JPanel beverageItemContainer = new JPanel();
+		beverageItemContainer.setOpaque(false);
 		beverageContainer.add(beverageItemContainer, BorderLayout.CENTER);
-		beverageItemContainer.setLayout(new GridLayout(0, 3, 50, 5));
+		beverageItemContainer.setLayout(new GridLayout(0, 3, 40, 5));
 
 		// Example product data
 		products = new ArrayList<>();
@@ -90,8 +91,7 @@ public class StorefrontDisplay extends JFrame {
 		products.add(new Snack("Choccy Muffin", "chocolatemuffin.png", 4.99, 10));
 		products.add(new Snack("Croissant", "croissant.png", 3.99, 18));
 		products.add(new Snack("Paninini", "panini.png", 6.49, 14));
-//		products.add(new Snack("Cookies", "cookies.png", 2.99, 20));// DOESNT EXIST
-//		products.add(new Snack("Cake Slice", "cakeslice.png", 5.49, 10)); //DOESNT EXIST
+		// TODO lets add a cinnamon roll
 
 		// Beverages
 		products.add(new Beverage("Boba Milk Tea", "bobatea.png", 4.49, 12, 16));
@@ -99,7 +99,7 @@ public class StorefrontDisplay extends JFrame {
 		products.add(new Beverage("Macchiato", "macchiato.png", 4.99, 18, 8));
 		products.add(new Beverage("Black", "black.png", 5.29, 20, 16));
 		products.add(new Beverage("Latte", "cream.png", 3.99, 10, 2));
-//		products.add(new Beverage("Americano", "americano.png", 3.49, 15, 12)); // DOESNT EXIST
+		// TODO lets add a cold brew
 //		products.add(new Beverage("Cold Brew", "coldbrew.png", 4.59, 14, 16)); // DOESNT EXIST
 
 		JPanel snackContainer = new JPanel();
@@ -110,7 +110,7 @@ public class StorefrontDisplay extends JFrame {
 		snackContainer.add(snackTitle, BorderLayout.NORTH);
 
 		JPanel snackItemContainer = new JPanel();
-		snackItemContainer.setLayout(new GridLayout(0, 3, 50, 5));
+		snackItemContainer.setLayout(new GridLayout(0, 3, 40, 5));
 
 		for (Product product : products) { // fill the snack and beverage containers
 			URL imgPath = getClass().getResource("/" + product.getImage());
@@ -125,20 +125,24 @@ public class StorefrontDisplay extends JFrame {
 
 		snackContainer.add(snackItemContainer);
 
+		// SHOPPING CART
+
+		JPanel cartContainer = new JPanel();
+		cartContainer.setPreferredSize(new Dimension((int) (width * 0.3), height - 50));
+		cartContainer.setOpaque(true);
+		cartContainer.setBackground(Color.WHITE);
+
+		getContentPane().add(cartContainer, BorderLayout.EAST);
+
+		// END SHOPPING CART
+
 		// TODO add a background to the contentPane - make this work
 //		StorefrontBackground bgPanel = new StorefrontBackground();
 //		bgPanel.setLayout(null);
 //		bgPanel.setBounds(0, 0, getWidth(), getHeight()); // Fill the frame
 //		bgPanel.setOpaque(true);
-
+//
 //		getContentPane().add(bgPanel);// set bg
-
-		// SHOPPING CART
-
-		JPanel cartContainer = new JPanel();
-		cartContainer.setPreferredSize(new Dimension((int) (height * 0.3), 1000));
-
-		getContentPane().add(cartContainer);
 
 		pack();
 		setVisible(true);
@@ -169,12 +173,14 @@ public class StorefrontDisplay extends JFrame {
 
 	private JPanel createBeverageContainer() {
 		JPanel beverageContainer = new JPanel();
+		beverageContainer.setOpaque(false);
 		beverageContainer.setLayout(new BorderLayout(0, 0));
 		return beverageContainer;
 	}
 
 	private JPanel createProductContainer() {
 		JPanel productContainer = new JPanel();
+		productContainer.setOpaque(false);
 		productContainer.setPreferredSize(new Dimension(500, 350));
 		productContainer.setLayout(new GridLayout(0, 1, 0, 0));
 		return productContainer;
