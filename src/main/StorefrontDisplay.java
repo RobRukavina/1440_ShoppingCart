@@ -14,6 +14,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -138,12 +139,12 @@ public class StorefrontDisplay extends JFrame {
 		cartContainer.setLayout(new BorderLayout(0, 0));
 		
 		cartItemsPanel = new JPanel();
+		cartItemsPanel.setBackground(new Color(255, 255, 255));
 		cartContainer.add(cartItemsPanel, BorderLayout.CENTER);
-		cartItemsPanel.setLayout(new GridLayout(0, 1, 10, 10));
+		cartItemsPanel.setLayout((LayoutManager) new BoxLayout(cartItemsPanel, BoxLayout.Y_AXIS));
 		
-		totalLabel = new JLabel("  Total: $0.00 ");
-		totalLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		totalLabel.setFont(new Font("Tahoma", Font.BOLD, 14));
+		totalLabel = new JLabel("Total Price: $0.00 ");
+		totalLabel.setFont(new Font("Arial", Font.BOLD, 18));
 		cartContainer.add(totalLabel, BorderLayout.SOUTH);
 		
 		// END SHOPPING CART
@@ -162,16 +163,19 @@ public class StorefrontDisplay extends JFrame {
 	}
 	
 	private void updateCartDisplay() {
-	    cartItemsPanel.removeAll();  // Clear current items
+	    cartItemsPanel.removeAll();
 
-	    // Loop through products in ShoppingCart
 	    for (int i = 0; i < ShoppingCart.productCount; i++) {
 	        Product product = ShoppingCart.products[i];
-	        JLabel itemLabel = new JLabel(product.getName() + " x" + product.getQty());
+	        if (product != null) {
+	        JLabel itemLabel = new JLabel(product.getName() + " x" + product.getQty() 
+	        + "     $" + product.getSubtotal());
+	        itemLabel.setFont(new Font("Arial", Font.ITALIC, 18));
+	        itemLabel.setHorizontalAlignment(SwingConstants.CENTER);
 	        cartItemsPanel.add(itemLabel);
 	    }
-
-	    // Update total price
+	}
+	    
 	    double total = ShoppingCart.calculateTotalPrice();
 	    totalLabel.setText(String.format("Total Price: $%.2f", total));
 
@@ -273,7 +277,7 @@ public class StorefrontDisplay extends JFrame {
 		System.out.println("you added " + product.getName() + " to the cart");
 		System.out.println();
 		ShoppingCart.addProduct(product, product.getPrice());
-
+		updateCartDisplay();
 	}
 
 }
