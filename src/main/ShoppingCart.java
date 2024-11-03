@@ -11,8 +11,8 @@ import javax.swing.SwingConstants;
 public class ShoppingCart extends JPanel {
 
 	private static final long serialVersionUID = 1L;
-	private static Product[] products = new Product[10]; // static array to be changed later.
-	private static int productCount = 0;
+	public static Product[] products = new Product[10]; // static array to be changed later.
+	public static int productCount = 0;
 	private static JLabel totalLabel;
 
 	/**

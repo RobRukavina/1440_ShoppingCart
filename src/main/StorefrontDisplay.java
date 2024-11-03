@@ -30,6 +30,9 @@ public class StorefrontDisplay extends JFrame {
 	private ImageIcon productIcon;
 	private final int width = 1200;
 	private final int height = 800;
+    private JPanel cartContainer;
+    private JPanel cartItemsPanel;
+    private JLabel totalLabel;
 
 	/**
 	 * Launch the application.
@@ -127,13 +130,22 @@ public class StorefrontDisplay extends JFrame {
 
 		// SHOPPING CART
 
-		JPanel cartContainer = new JPanel();
+		cartContainer = new JPanel();
+		getContentPane().add(cartContainer, BorderLayout.EAST);
 		cartContainer.setPreferredSize(new Dimension((int) (width * 0.3), height - 50));
 		cartContainer.setOpaque(true);
 		cartContainer.setBackground(Color.WHITE);
-
-		getContentPane().add(cartContainer, BorderLayout.EAST);
-
+		cartContainer.setLayout(new BorderLayout(0, 0));
+		
+		cartItemsPanel = new JPanel();
+		cartContainer.add(cartItemsPanel, BorderLayout.CENTER);
+		cartItemsPanel.setLayout(new GridLayout(0, 1, 10, 10));
+		
+		totalLabel = new JLabel("  Total: $0.00 ");
+		totalLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		totalLabel.setFont(new Font("Tahoma", Font.BOLD, 14));
+		cartContainer.add(totalLabel, BorderLayout.SOUTH);
+		
 		// END SHOPPING CART
 
 		// TODO add a background to the contentPane - make this work
@@ -147,6 +159,24 @@ public class StorefrontDisplay extends JFrame {
 		pack();
 		setVisible(true);
 
+	}
+	
+	private void updateCartDisplay() {
+	    cartItemsPanel.removeAll();  // Clear current items
+
+	    // Loop through products in ShoppingCart
+	    for (int i = 0; i < ShoppingCart.productCount; i++) {
+	        Product product = ShoppingCart.products[i];
+	        JLabel itemLabel = new JLabel(product.getName() + " x" + product.getQty());
+	        cartItemsPanel.add(itemLabel);
+	    }
+
+	    // Update total price
+	    double total = ShoppingCart.calculateTotalPrice();
+	    totalLabel.setText(String.format("Total Price: $%.2f", total));
+
+	    cartItemsPanel.revalidate();
+	    cartItemsPanel.repaint();
 	}
 
 	private JLabel titleLabel() {
