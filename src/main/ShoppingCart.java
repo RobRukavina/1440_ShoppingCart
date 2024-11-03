@@ -11,20 +11,8 @@ import javax.swing.SwingConstants;
 public class ShoppingCart extends JPanel {
 
 	private static final long serialVersionUID = 1L;
-	private static Product[] products = new Product[10]; // static array to be changed later.
-	private static int productCount = 0;
-	private static JLabel totalLabel;
-
-	/**
-	 * Create the panel.
-	 */
-	public ShoppingCart() {
-		setLayout(new BorderLayout(0, 0));
-		totalLabel = new JLabel("Total Price: $0.00");
-		totalLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		add(totalLabel, BorderLayout.SOUTH);
-//		updateTotalPrice();
-	}
+	public static Product[] products = new Product[100];
+	public static int productCount = 0;
 
 	public static void addProduct(Product product, double price) {
 
@@ -48,6 +36,16 @@ public class ShoppingCart extends JPanel {
 //		updateTotalPrice();
 
 		printProducts();
+	}
+	
+	public static void removeProduct(Product product) {
+		for (int i = 0; i < productCount; i++) {
+			if (products[i] != null && products[i].equals(product)) {
+				products[i] = null;
+				productCount--;
+				break;
+			}
+		}
 	}
 
 	/**

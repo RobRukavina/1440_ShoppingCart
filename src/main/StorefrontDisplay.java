@@ -14,6 +14,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -30,6 +31,9 @@ public class StorefrontDisplay extends JFrame {
 	private ImageIcon productIcon;
 	private final int width = 1200;
 	private final int height = 800;
+    private JPanel cartContainer;
+    private JPanel cartItemsPanel;
+    private JLabel totalLabel;
 
 	/**
 	 * Launch the application.
@@ -127,13 +131,22 @@ public class StorefrontDisplay extends JFrame {
 
 		// SHOPPING CART
 
-		JPanel cartContainer = new JPanel();
+		cartContainer = new JPanel();
+		getContentPane().add(cartContainer, BorderLayout.EAST);
 		cartContainer.setPreferredSize(new Dimension((int) (width * 0.3), height - 50));
 		cartContainer.setOpaque(true);
 		cartContainer.setBackground(Color.WHITE);
-
-		getContentPane().add(cartContainer, BorderLayout.EAST);
-
+		cartContainer.setLayout(new BorderLayout(0, 0));
+		
+		cartItemsPanel = new JPanel();
+		cartItemsPanel.setBackground(new Color(255, 255, 255));
+		cartContainer.add(cartItemsPanel, BorderLayout.CENTER);
+		cartItemsPanel.setLayout((LayoutManager) new BoxLayout(cartItemsPanel, BoxLayout.Y_AXIS));
+		
+		totalLabel = new JLabel("Total Price: $0.00 ");
+		totalLabel.setFont(new Font("Arial", Font.BOLD, 18));
+		cartContainer.add(totalLabel, BorderLayout.SOUTH);
+		
 		// END SHOPPING CART
 
 		// TODO add a background to the contentPane - make this work
@@ -147,6 +160,27 @@ public class StorefrontDisplay extends JFrame {
 		pack();
 		setVisible(true);
 
+	}
+	
+	private void updateCartDisplay() {
+	    cartItemsPanel.removeAll();
+
+	    for (int i = 0; i < ShoppingCart.productCount; i++) {
+	        Product product = ShoppingCart.products[i];
+	        if (product != null) {
+	        JLabel itemLabel = new JLabel(product.getName() + " x" + product.getQty() 
+	        + "     $" + product.getSubtotal());
+	        itemLabel.setFont(new Font("Arial", Font.ITALIC, 18));
+	        itemLabel.setHorizontalAlignment(SwingConstants.CENTER);
+	        cartItemsPanel.add(itemLabel);
+	    }
+	}
+	    
+	    double total = ShoppingCart.calculateTotalPrice();
+	    totalLabel.setText(String.format("Total Price: $%.2f", total));
+
+	    cartItemsPanel.revalidate();
+	    cartItemsPanel.repaint();
 	}
 
 	private JLabel titleLabel() {
@@ -243,7 +277,7 @@ public class StorefrontDisplay extends JFrame {
 		System.out.println("you added " + product.getName() + " to the cart");
 		System.out.println();
 		ShoppingCart.addProduct(product, product.getPrice());
-
+		updateCartDisplay();
 	}
 
 }
