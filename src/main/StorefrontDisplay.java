@@ -31,9 +31,9 @@ public class StorefrontDisplay extends JFrame {
 	private ImageIcon productIcon;
 	private final int width = 1200;
 	private final int height = 800;
-    private JPanel cartContainer;
-    private JPanel cartItemsPanel;
-    private JLabel totalLabel;
+	private JPanel cartContainer;
+	private JPanel cartItemsPanel;
+	private JLabel totalLabel;
 
 	/**
 	 * Launch the application.
@@ -137,16 +137,16 @@ public class StorefrontDisplay extends JFrame {
 		cartContainer.setOpaque(true);
 		cartContainer.setBackground(Color.WHITE);
 		cartContainer.setLayout(new BorderLayout(0, 0));
-		
+
 		cartItemsPanel = new JPanel();
 		cartItemsPanel.setBackground(new Color(255, 255, 255));
 		cartContainer.add(cartItemsPanel, BorderLayout.CENTER);
 		cartItemsPanel.setLayout((LayoutManager) new BoxLayout(cartItemsPanel, BoxLayout.Y_AXIS));
-		
+
 		totalLabel = new JLabel("Total Price: $0.00 ");
 		totalLabel.setFont(new Font("Arial", Font.BOLD, 18));
 		cartContainer.add(totalLabel, BorderLayout.SOUTH);
-		
+
 		// END SHOPPING CART
 
 		// TODO add a background to the contentPane - make this work
@@ -160,27 +160,6 @@ public class StorefrontDisplay extends JFrame {
 		pack();
 		setVisible(true);
 
-	}
-	
-	private void updateCartDisplay() {
-	    cartItemsPanel.removeAll();
-
-	    for (int i = 0; i < ShoppingCart.productCount; i++) {
-	        Product product = ShoppingCart.products[i];
-	        if (product != null) {
-	        JLabel itemLabel = new JLabel(product.getName() + " x" + product.getQty() 
-	        + "     $" + product.getSubtotal());
-	        itemLabel.setFont(new Font("Arial", Font.ITALIC, 18));
-	        itemLabel.setHorizontalAlignment(SwingConstants.CENTER);
-	        cartItemsPanel.add(itemLabel);
-	    }
-	}
-	    
-	    double total = ShoppingCart.calculateTotalPrice();
-	    totalLabel.setText(String.format("Total Price: $%.2f", total));
-
-	    cartItemsPanel.revalidate();
-	    cartItemsPanel.repaint();
 	}
 
 	private JLabel titleLabel() {
@@ -235,7 +214,8 @@ public class StorefrontDisplay extends JFrame {
 		productImg.setOpaque(true);
 		productImg.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				addProductToCart(product);
+//				addProductToCart(product);
+				removeProductFromCart(product);
 			}
 		});
 
@@ -259,6 +239,12 @@ public class StorefrontDisplay extends JFrame {
 
 	}
 
+	protected void removeProductFromCart(Product product) {
+		ShoppingCart.removeProduct(product);
+		updateCartDisplay();
+
+	}
+
 	private JButton addToCartButton(Product product) {
 		JButton addToCartBtn = new JButton();
 		addToCartBtn.setOpaque(true);
@@ -278,6 +264,27 @@ public class StorefrontDisplay extends JFrame {
 		System.out.println();
 		ShoppingCart.addProduct(product, product.getPrice());
 		updateCartDisplay();
+	}
+
+	private void updateCartDisplay() {
+		cartItemsPanel.removeAll();
+
+		for (int i = 0; i < ShoppingCart.products.size(); i++) {
+			Product product = ShoppingCart.products.get(i);
+			if (product != null && product.getQty() > 0) {
+				JLabel itemLabel = new JLabel(
+						product.getName() + " x" + product.getQty() + "     $" + product.getSubtotal());
+				itemLabel.setFont(new Font("Arial", Font.ITALIC, 18));
+				itemLabel.setHorizontalAlignment(SwingConstants.CENTER);
+				cartItemsPanel.add(itemLabel);
+			}
+		}
+
+		double total = ShoppingCart.calculateTotalPrice();
+		totalLabel.setText(String.format("Total Price: $%.2f", total));
+
+		cartItemsPanel.revalidate();
+		cartItemsPanel.repaint();
 	}
 
 }
