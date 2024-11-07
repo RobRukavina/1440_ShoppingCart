@@ -23,6 +23,12 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
+/**
+ * StorefrontDisplay class sets up the main user interface for an online store
+ * that displays products and allows customers to add items to a shopping cart.
+ * It includes features for snack and beverage displays, a shopping cart, and
+ * checkout functionality.
+ */
 public class StorefrontDisplay extends JFrame {
 
 	private static final long serialVersionUID = 1L;
@@ -106,7 +112,10 @@ public class StorefrontDisplay extends JFrame {
 		JPanel snackItemContainer = new JPanel();
 		snackItemContainer.setLayout(new GridLayout(0, 3, 40, 5));
 
-		for (Product product : products) { // fill the snack and beverage containers
+		/**
+		 * Fills the snack and beverage containers with images.
+		 */
+		for (Product product : products) {
 			URL imgPath = getClass().getResource("/" + product.getImage());
 			JPanel productItem = createProductItem(product, imgPath);
 
@@ -156,6 +165,9 @@ public class StorefrontDisplay extends JFrame {
 
 	}
 
+	/**
+	 * Populates the available products list with predefined products.
+	 */
 	private void productsAvailable() {
 		// Example product data
 		products = new ArrayList<>();
@@ -179,15 +191,30 @@ public class StorefrontDisplay extends JFrame {
 
 	}
 
+	/**
+	 * Initializes the shopping cart container panel with the specified width.
+	 *
+	 * @param containerWidth width of the cart container
+	 */
 	private void cartContainer(int containerWidth) {
 		cartContainer = new JPanel();
+		cartContainer.setOpaque(false);
 
 		cartContainer.setPreferredSize(new Dimension(containerWidth, height - 50));
 
 		cartContainer.setBorder(new EmptyBorder(20, 0, 100, 20));
-		cartContainer.setOpaque(false);
 	}
 
+	/**
+	 * Creates a rounded inner panel for the shopping cart with specified
+	 * dimensions.
+	 *
+	 * @param containerWidth width of the container
+	 * @param cornerRadius   corner radius of the rounded panel
+	 * @param outlineColor   outline color of the panel
+	 * @param outlineWidth   width of the outline
+	 * @return rounded panel
+	 */
 	private RoundedPanel createRoundedPanel(int containerWidth, int cornerRadius, Color outlineColor,
 			int outlineWidth) {
 		RoundedPanel roundedInnerPanel = new RoundedPanel(cornerRadius, outlineColor, outlineWidth);
@@ -197,6 +224,14 @@ public class StorefrontDisplay extends JFrame {
 		return roundedInnerPanel;
 	}
 
+	/**
+	 * Sets up the panel for displaying items in the shopping cart.
+	 *
+	 * @param containerWidth width of the panel
+	 * @param cornerRadius   corner radius for the panel
+	 * @param outlineColor   color of the outline
+	 * @param outlineWidth   width of the outline
+	 */
 	private void cartItemPanel(int containerWidth, int cornerRadius, Color outlineColor, int outlineWidth) {
 		cartItemsPanel = new RoundedPanel(cornerRadius, outlineColor, outlineWidth);
 		cartItemsPanel.setPreferredSize(new Dimension(containerWidth, 500));
@@ -206,6 +241,12 @@ public class StorefrontDisplay extends JFrame {
 		cartItemsPanel.setLayout(new BoxLayout(cartItemsPanel, BoxLayout.Y_AXIS));
 	}
 
+	/**
+	 * Configures and initializes the label displaying the total price of items in
+	 * the cart.
+	 *
+	 * @param containerWidth width of the label
+	 */
 	private void totalLabel(int containerWidth) {
 		totalLabel = new JLabel("Total Price: $0.00 ");
 		totalLabel.setFont(new Font("Arial", Font.BOLD, 18));
@@ -247,6 +288,11 @@ public class StorefrontDisplay extends JFrame {
 		return beverageLbl;
 	}
 
+	/**
+	 * Creates a beverage container panel.
+	 *
+	 * @return beverage container panel
+	 */
 	private JPanel createBeverageContainer() {
 		JPanel beverageContainer = new JPanel();
 		beverageContainer.setOpaque(false);
@@ -254,6 +300,11 @@ public class StorefrontDisplay extends JFrame {
 		return beverageContainer;
 	}
 
+	/**
+	 * Creates a product container for organizing beverage and snack items.
+	 *
+	 * @return product container panel
+	 */
 	private JPanel createProductContainer() {
 		JPanel productContainer = new JPanel();
 		productContainer.setOpaque(false);
@@ -263,9 +314,12 @@ public class StorefrontDisplay extends JFrame {
 	}
 
 	/**
-	 * Panel includes image and name of snack/beverage
-	 * 
-	 * @param product product object
+	 * Creates a product item panel with an image and adds an action listener for
+	 * adding items to the cart.
+	 *
+	 * @param product the product to be displayed
+	 * @param imgPath URL path to the product's image
+	 * @return product item panel
 	 */
 	private JPanel createProductItem(Product product, URL imgPath) {
 
@@ -329,18 +383,54 @@ public class StorefrontDisplay extends JFrame {
 		updateCartDisplay();
 	}
 
+	/**
+	 * Updates the shopping cart display by clearing and repopulating the cart items
+	 * panel with the current products in the cart. For each product, displays the
+	 * product name, quantity, subtotal, and quantity adjustment buttons (plus and
+	 * minus).
+	 * 
+	 * The minus button decreases the product quantity by one, or removes the
+	 * product if quantity reaches zero. The plus button increases the product
+	 * quantity by one. Updates the cart total price after modifying product
+	 * quantities.
+	 */
 	private void updateCartDisplay() {
 		cartItemsPanel.removeAll();
 
-		for (int i = 0; i < ShoppingCart.products.size(); i++) {
-			Product product = ShoppingCart.products.get(i);
+		for (Product product : ShoppingCart.products) {
 			if (product != null && product.getQty() > 0) {
+				JPanel itemPanel = new JPanel();
+				itemPanel.setLayout(new BoxLayout(itemPanel, BoxLayout.X_AXIS));
+				itemPanel.setBorder(new EmptyBorder(5, 10, 5, 10));
+
 				JLabel itemLabel = new JLabel(
 						product.getName() + " x" + product.getQty() + "     $" + product.getSubtotal());
 				itemLabel.setFont(new Font("Arial", Font.ITALIC, 18));
-				itemLabel.setBorder(new EmptyBorder(5, 10, 0, 10));
-				itemLabel.setHorizontalAlignment(SwingConstants.CENTER);
-				cartItemsPanel.add(itemLabel);
+				itemPanel.add(itemLabel);
+
+				JButton minusButton = new JButton("-");
+				minusButton.setPreferredSize(new Dimension(45, 25));
+				minusButton.setFont(new Font("Arial", Font.BOLD, 16));
+				minusButton.addActionListener(e -> {
+					if (product.getQty() > 1) {
+						product.updateQty(product.getQty() - 1);
+					} else {
+						ShoppingCart.removeProduct(product);
+					}
+					updateCartDisplay();
+				});
+				itemPanel.add(minusButton);
+
+				JButton plusButton = new JButton("+");
+				plusButton.setPreferredSize(new Dimension(45, 25));
+				plusButton.setFont(new Font("Arial", Font.BOLD, 16));
+				plusButton.addActionListener(e -> {
+					product.updateQty(product.getQty() + 1);
+					updateCartDisplay();
+				});
+				itemPanel.add(plusButton);
+
+				cartItemsPanel.add(itemPanel);
 			}
 		}
 
