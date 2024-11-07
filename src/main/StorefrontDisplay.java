@@ -7,13 +7,13 @@ import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.LayoutManager;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -34,6 +34,11 @@ public class StorefrontDisplay extends JFrame {
 	private JPanel cartContainer;
 	private JPanel cartItemsPanel;
 	private JLabel totalLabel;
+
+	private int containerWidth = (int) (width * 0.27);
+	private int cornerRadius = 10;
+	private Color outlineColor = null;
+	private int outlineWidth = 0;
 
 	/**
 	 * Launch the application.
@@ -58,8 +63,9 @@ public class StorefrontDisplay extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		// setExtendedState(JFrame.MAXIMIZED_BOTH); // full screen
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		System.out.println(screenSize);
+//		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+
+		setMinimumSize(new Dimension(width, height));
 
 		setBounds(100, 100, width, height);
 		getContentPane().setLayout(new BorderLayout(0, 0));
@@ -71,6 +77,8 @@ public class StorefrontDisplay extends JFrame {
 
 		JPanel productContainer = createProductContainer();
 		productContainer.setPreferredSize(new Dimension((int) (width * 0.7), height));
+		productContainer.setBorder(new EmptyBorder(10, 20, 0, 10));
+
 		getContentPane().add(productContainer, BorderLayout.WEST);
 
 		LayoutManager itemContainerLayout = new GridLayout(0, 3, 50, 5); // layout dimensions
@@ -86,25 +94,7 @@ public class StorefrontDisplay extends JFrame {
 		beverageContainer.add(beverageItemContainer, BorderLayout.CENTER);
 		beverageItemContainer.setLayout(new GridLayout(0, 3, 40, 5));
 
-		// Example product data
-		products = new ArrayList<>();
-
-		// Snacks
-		products.add(new Snack("Banana Bread", "bananabread.png", 5.99, 15));
-		products.add(new Snack("Blueberry Muffin", "blueberrymuffin.png", 4.99, 12));
-		products.add(new Snack("Choccy Muffin", "chocolatemuffin.png", 4.99, 10));
-		products.add(new Snack("Croissant", "croissant.png", 3.99, 18));
-		products.add(new Snack("Paninini", "panini.png", 6.49, 14));
-		// TODO lets add a cinnamon roll
-
-		// Beverages
-		products.add(new Beverage("Boba Milk Tea", "bobatea.png", 4.49, 12, 16));
-		products.add(new Beverage("Frappuccino", "frappuccino.png", 5.99, 15, 12));
-		products.add(new Beverage("Macchiato", "macchiato.png", 4.99, 18, 8));
-		products.add(new Beverage("Black", "black.png", 5.29, 20, 16));
-		products.add(new Beverage("Latte", "cream.png", 3.99, 10, 2));
-		// TODO lets add a cold brew
-//		products.add(new Beverage("Cold Brew", "coldbrew.png", 4.59, 14, 16)); // DOESNT EXIST
+		productsAvailable();
 
 		JPanel snackContainer = new JPanel();
 		snackContainer.setLayout(new BorderLayout(0, 0));
@@ -131,21 +121,25 @@ public class StorefrontDisplay extends JFrame {
 
 		// SHOPPING CART
 
-		cartContainer = new JPanel();
+		cartContainer(containerWidth);
 		getContentPane().add(cartContainer, BorderLayout.EAST);
-		cartContainer.setPreferredSize(new Dimension((int) (width * 0.3), height - 50));
-		cartContainer.setOpaque(true);
-		cartContainer.setBackground(Color.WHITE);
-		cartContainer.setLayout(new BorderLayout(0, 0));
+		cartContainer.setLayout(new BoxLayout(cartContainer, BoxLayout.Y_AXIS));
 
-		cartItemsPanel = new JPanel();
-		cartItemsPanel.setBackground(new Color(255, 255, 255));
-		cartContainer.add(cartItemsPanel, BorderLayout.CENTER);
-		cartItemsPanel.setLayout((LayoutManager) new BoxLayout(cartItemsPanel, BoxLayout.Y_AXIS));
+		RoundedPanel roundedInnerPanel = createRoundedPanel(containerWidth, cornerRadius, outlineColor, outlineWidth);
+		roundedInnerPanel.setLayout(new BoxLayout(roundedInnerPanel, BoxLayout.Y_AXIS));
 
-		totalLabel = new JLabel("Total Price: $0.00 ");
-		totalLabel.setFont(new Font("Arial", Font.BOLD, 18));
-		cartContainer.add(totalLabel, BorderLayout.SOUTH);
+		cartItemPanel(containerWidth, cornerRadius, outlineColor, outlineWidth);
+		roundedInnerPanel.add(cartItemsPanel);
+
+		totalLabel(containerWidth);
+		roundedInnerPanel.add(totalLabel);
+
+		cartContainer.add(roundedInnerPanel);
+
+		cartContainer.add(Box.createVerticalStrut(10));
+
+		JButton checkoutBtn = checkoutButton(containerWidth);
+		cartContainer.add(checkoutBtn);
 
 		// END SHOPPING CART
 
@@ -160,6 +154,75 @@ public class StorefrontDisplay extends JFrame {
 		pack();
 		setVisible(true);
 
+	}
+
+	private void productsAvailable() {
+		// Example product data
+		products = new ArrayList<>();
+
+		// Snacks
+		products.add(new Snack("Banana Bread", "bananabread.png", 5.99, 15));
+		products.add(new Snack("Blueberry Muffin", "blueberrymuffin.png", 4.99, 12));
+		products.add(new Snack("Choccy Muffin", "chocolatemuffin.png", 4.99, 10));
+		products.add(new Snack("Croissant", "croissant.png", 3.99, 18));
+		products.add(new Snack("Paninini", "panini.png", 6.49, 14));
+		// TODO lets add a cinnamon roll
+
+		// Beverages
+		products.add(new Beverage("Boba Milk Tea", "bobatea.png", 4.49, 12, 16));
+		products.add(new Beverage("Frappuccino", "frappuccino.png", 5.99, 15, 12));
+		products.add(new Beverage("Macchiato", "macchiato.png", 4.99, 18, 8));
+		products.add(new Beverage("Black", "black.png", 5.29, 20, 16));
+		products.add(new Beverage("Latte", "cream.png", 3.99, 10, 2));
+		// TODO lets add a cold brew
+//		products.add(new Beverage("Cold Brew", "coldbrew.png", 4.59, 14, 16)); // DOESNT EXIST
+
+	}
+
+	private void cartContainer(int containerWidth) {
+		cartContainer = new JPanel();
+
+		cartContainer.setPreferredSize(new Dimension(containerWidth, height - 50));
+
+		cartContainer.setBorder(new EmptyBorder(20, 0, 100, 20));
+		cartContainer.setOpaque(false);
+	}
+
+	private RoundedPanel createRoundedPanel(int containerWidth, int cornerRadius, Color outlineColor,
+			int outlineWidth) {
+		RoundedPanel roundedInnerPanel = new RoundedPanel(cornerRadius, outlineColor, outlineWidth);
+		roundedInnerPanel.setBackground(Color.WHITE);
+		roundedInnerPanel.setPreferredSize(new Dimension(containerWidth, height - 150));
+		roundedInnerPanel.setMinimumSize(new Dimension(containerWidth, height - 150));
+		return roundedInnerPanel;
+	}
+
+	private void cartItemPanel(int containerWidth, int cornerRadius, Color outlineColor, int outlineWidth) {
+		cartItemsPanel = new RoundedPanel(cornerRadius, outlineColor, outlineWidth);
+		cartItemsPanel.setPreferredSize(new Dimension(containerWidth, 500));
+		cartItemsPanel.setMinimumSize(new Dimension(containerWidth, 500));
+		cartItemsPanel.setMaximumSize(new Dimension(containerWidth, height - 50));
+		cartItemsPanel.setBackground(Color.WHITE);
+		cartItemsPanel.setLayout(new BoxLayout(cartItemsPanel, BoxLayout.Y_AXIS));
+	}
+
+	private void totalLabel(int containerWidth) {
+		totalLabel = new JLabel("Total Price: $0.00 ");
+		totalLabel.setFont(new Font("Arial", Font.BOLD, 18));
+		totalLabel.setOpaque(false);
+		totalLabel.setBackground(Color.RED);
+		totalLabel.setPreferredSize(new Dimension(containerWidth, 30));
+		totalLabel.setMinimumSize(new Dimension(containerWidth, 30));
+		totalLabel.setMaximumSize(new Dimension(containerWidth, 30));
+		totalLabel.setBorder(new EmptyBorder(10, 10, 20, 10));
+	}
+
+	private JButton checkoutButton(int containerWidth) {
+		JButton checkoutBtn = new JButton("Checkout");
+		checkoutBtn.setPreferredSize(new Dimension(containerWidth, 50));
+		checkoutBtn.setMinimumSize(new Dimension(containerWidth, 50));
+		checkoutBtn.setMaximumSize(new Dimension(containerWidth, 50));
+		return checkoutBtn;
 	}
 
 	private JLabel titleLabel() {
@@ -275,6 +338,7 @@ public class StorefrontDisplay extends JFrame {
 				JLabel itemLabel = new JLabel(
 						product.getName() + " x" + product.getQty() + "     $" + product.getSubtotal());
 				itemLabel.setFont(new Font("Arial", Font.ITALIC, 18));
+				itemLabel.setBorder(new EmptyBorder(5, 10, 0, 10));
 				itemLabel.setHorizontalAlignment(SwingConstants.CENTER);
 				cartItemsPanel.add(itemLabel);
 			}
