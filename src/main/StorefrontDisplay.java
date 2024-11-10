@@ -21,7 +21,9 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 
 /**
  * StorefrontDisplay class sets up the main user interface for an online store
@@ -198,7 +200,6 @@ public class StorefrontDisplay extends JFrame {
 	 */
 	private void cartContainer(int containerWidth) {
 		cartContainer = new JPanel();
-		cartContainer.setOpaque(false);
 
 		cartContainer.setPreferredSize(new Dimension(containerWidth, height - 50));
 
@@ -234,6 +235,8 @@ public class StorefrontDisplay extends JFrame {
 	 */
 	private void cartItemPanel(int containerWidth, int cornerRadius, Color outlineColor, int outlineWidth) {
 		cartItemsPanel = new RoundedPanel(cornerRadius, outlineColor, outlineWidth);
+		cartItemsPanel.setSize(new Dimension(containerWidth, 800));
+		cartItemsPanel.setOpaque(true);
 		cartItemsPanel.setPreferredSize(new Dimension(containerWidth, 500));
 		cartItemsPanel.setMinimumSize(new Dimension(containerWidth, 500));
 		cartItemsPanel.setMaximumSize(new Dimension(containerWidth, height - 50));
@@ -260,6 +263,10 @@ public class StorefrontDisplay extends JFrame {
 
 	private JButton checkoutButton(int containerWidth) {
 		JButton checkoutBtn = new JButton("Checkout");
+		checkoutBtn.setContentAreaFilled(false);
+		checkoutBtn.setBackground(Color.LIGHT_GRAY);
+		checkoutBtn.setFocusable(false);
+		checkoutBtn.setOpaque(true);
 		checkoutBtn.setPreferredSize(new Dimension(containerWidth, 50));
 		checkoutBtn.setMinimumSize(new Dimension(containerWidth, 50));
 		checkoutBtn.setMaximumSize(new Dimension(containerWidth, 50));
@@ -328,6 +335,10 @@ public class StorefrontDisplay extends JFrame {
 
 		JButton productImg = new JButton();
 		productImg.setIcon(new ImageIcon(imgPath));
+		productImg.setContentAreaFilled(false);
+		productImg.setBackground(Color.LIGHT_GRAY);
+		productImg.setBorderPainted(false);
+		productImg.setFocusable(false);
 		productImg.setOpaque(true);
 		productImg.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -346,7 +357,6 @@ public class StorefrontDisplay extends JFrame {
 		productLbl.setFont(new Font("Serif", Font.ITALIC, 14));
 
 		JButton addToCartBtn = addToCartButton(product);
-
 		productLblContainer.add(productLbl);
 		productLblContainer.add(addToCartBtn);
 
@@ -368,8 +378,10 @@ public class StorefrontDisplay extends JFrame {
 		addToCartBtn.setFont(new Font("Serif", Font.PLAIN, 14));
 		addToCartBtn.setText("add to cart");
 		addToCartBtn.setBackground(Color.WHITE);
+		addToCartBtn.setFocusPainted(false);
+		addToCartBtn.setOpaque(true);
 		addToCartBtn.setPreferredSize(new Dimension(50, 14));
-		addToCartBtn.setBorder(new EmptyBorder(10, 0, 10, 0));
+//		addToCartBtn.setBorder(new EmptyBorder(10, 0, 10, 0));
 		addToCartBtn.addActionListener(e -> addProductToCart(product));
 		return addToCartBtn;
 	}
@@ -396,21 +408,30 @@ public class StorefrontDisplay extends JFrame {
 	 */
 	private void updateCartDisplay() {
 		cartItemsPanel.removeAll();
-
 		for (Product product : ShoppingCart.products) {
 			if (product != null && product.getQty() > 0) {
 				JPanel itemPanel = new JPanel();
-				itemPanel.setLayout(new BoxLayout(itemPanel, BoxLayout.X_AXIS));
-				itemPanel.setBorder(new EmptyBorder(5, 10, 5, 10));
-
+				itemPanel.setLayout(new BorderLayout(0,0));
+				itemPanel.setMaximumSize(new Dimension(400, 25));
+				itemPanel.setBackground(Color.WHITE);
+				itemPanel.setAlignmentX(LEFT_ALIGNMENT);
+				itemPanel.setBorder(new EmptyBorder(0, 0, 0, 0));
+				
 				JLabel itemLabel = new JLabel(
-						product.getName() + " x" + product.getQty() + "     $" + product.getSubtotal());
-				itemLabel.setFont(new Font("Arial", Font.ITALIC, 18));
-				itemPanel.add(itemLabel);
-
+					product.getName() + " x" + product.getQty() + "     $" + product.getSubtotal());
+				itemLabel.setFont(new Font("Arial", Font.ITALIC, 16));
+				itemLabel.setPreferredSize(new Dimension(125, 25));
+				itemLabel.setMaximumSize(new Dimension(125, 25));
+				itemLabel.setBorder(new EmptyBorder(0, 0, 0, 5));
+				
+				itemPanel.add(itemLabel, BorderLayout.CENTER);
+				
+				JPanel buttonPanel = new JPanel();
+				buttonPanel.setLayout(new BorderLayout());
+				buttonPanel.setAlignmentX(RIGHT_ALIGNMENT);
 				JButton minusButton = new JButton("-");
 				minusButton.setPreferredSize(new Dimension(45, 25));
-				minusButton.setFont(new Font("Arial", Font.BOLD, 16));
+				minusButton.setFont(new Font("Arial", Font.BOLD, 12));
 				minusButton.addActionListener(e -> {
 					if (product.getQty() > 1) {
 						product.updateQty(product.getQty() - 1);
@@ -418,27 +439,40 @@ public class StorefrontDisplay extends JFrame {
 						ShoppingCart.removeProduct(product);
 					}
 					updateCartDisplay();
+					updateCartTotal();
 				});
-				itemPanel.add(minusButton);
-
+				
+				buttonPanel.add(minusButton, BorderLayout.WEST);
+				
 				JButton plusButton = new JButton("+");
 				plusButton.setPreferredSize(new Dimension(45, 25));
-				plusButton.setFont(new Font("Arial", Font.BOLD, 16));
+				plusButton.setFont(new Font("Arial", Font.BOLD, 12));
 				plusButton.addActionListener(e -> {
 					product.updateQty(product.getQty() + 1);
 					updateCartDisplay();
+					updateCartTotal();
 				});
-				itemPanel.add(plusButton);
-
+				
+				buttonPanel.add(plusButton, BorderLayout.EAST);
+				itemPanel.add(buttonPanel, BorderLayout.EAST);
 				cartItemsPanel.add(itemPanel);
 			}
 		}
 
-		double total = ShoppingCart.calculateTotalPrice();
-		totalLabel.setText(String.format("Total Price: $%.2f", total));
-
+		updateCartTotal();
 		cartItemsPanel.revalidate();
 		cartItemsPanel.repaint();
+	}
+
+	/**
+	 * 
+	 * Updates the total label with the current 
+	 * shopping cart total
+	 * 
+	 */
+	private void updateCartTotal() {
+		double total = ShoppingCart.calculateTotalPrice();
+		totalLabel.setText(String.format("Total Price: $%.2f", total));
 	}
 
 }
