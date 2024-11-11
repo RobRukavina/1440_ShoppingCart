@@ -7,13 +7,9 @@ import javax.swing.JPanel;
 public class ShoppingCart extends JPanel {
 
 	private static final long serialVersionUID = 1L;
-	protected static ArrayList<Product> products = new ArrayList<Product>();
+	public static ArrayList<Product> products = new ArrayList<Product>();
 
 	public static void addProduct(Product product, double price) {
-
-//		Product existingProduct = Arrays.stream(products).filter(Objects::nonNull)
-//				.filter(p -> p.getName().equals(product.getName())) // Match by name
-//				.findFirst().orElse(null);
 		Boolean existingProduct = false;
 
 		for (Product p : products) {
@@ -25,25 +21,19 @@ public class ShoppingCart extends JPanel {
 		if (!existingProduct) {
 			products.add(product);
 			product.updateQty(product.getQty());
-			product.calcSubtotal();
 
 		} else {
 			product.updateQty(product.getQty() + 1);
 			System.out.println(product.getQty());
-
-			product.calcSubtotal();
 		}
-
-//		updateTotalPrice();
 
 		printProducts();
 	}
-
+	
 	public static void removeProduct(Product product) {
 
 		if (product.getQty() > 0) {
 			product.updateQty(product.getQty() - 1);
-			product.calcSubtotal();
 		}
 		printProducts();
 	}

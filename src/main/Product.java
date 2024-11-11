@@ -1,5 +1,7 @@
 package main;
 
+import java.text.DecimalFormat;
+
 /**
  * @author michaelevans
  */
@@ -19,24 +21,17 @@ public class Product {
 		this.stock = stock;
 		this.image = image;
 		this.qty = 1;
-		this.subtotal = price;
+		this.subtotal = 0.00;
 	}
 
 	/**
-	 * Update the quantity of a singular item.
-	 * 
+	 * Updates the quantity of a singular item.
+	 * This method also updates the subtotal field.
 	 * @param newQty new quantity of an item
 	 */
 	public void updateQty(int newQty) {
 		this.qty = newQty;
-	}
-
-	/**
-	 * Calculate the subtotal of a particular item.
-	 */
-	public void calcSubtotal() {
-		String formatted = String.format("%.2f", this.qty * this.price);
-		this.subtotal = Double.parseDouble(formatted);
+		this.subtotal = (double) this.qty * this.price;
 	}
 
 	public void updateStock() {
@@ -48,7 +43,9 @@ public class Product {
 	}
 
 	public double getSubtotal() {
-		return this.subtotal;
+		DecimalFormat df = new DecimalFormat("#,###.##");
+		String formatted = df.format(this.subtotal);
+		return Double.parseDouble(formatted);
 	}
 
 	public int getStock() {
