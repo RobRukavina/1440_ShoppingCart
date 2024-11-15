@@ -6,9 +6,6 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.GridLayout;
-import java.awt.LayoutManager;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,9 +18,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
-import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
 
 /**
  * StorefrontDisplay class sets up the main user interface for an online store
@@ -36,12 +31,10 @@ public class StorefrontDisplay extends JFrame {
 	private static final long serialVersionUID = 1L;
 
 	private List<Product> products;
-	private ImageIcon productIcon;
 	private final int width = 1200;
 	private final int height = 800;
 	private JPanel cartContainer;
-	private JPanel cartItemsPanel;
-	private JLabel totalLabel;
+	static JLabel totalLabel;
 
 	private int containerWidth = (int) (width * 0.27);
 	private int cornerRadius = 10;
@@ -70,9 +63,6 @@ public class StorefrontDisplay extends JFrame {
 	public StorefrontDisplay() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		// setExtendedState(JFrame.MAXIMIZED_BOTH); // full screen
-//		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-
 		setMinimumSize(new Dimension(width, height));
 
 		setBounds(100, 100, width, height);
@@ -88,8 +78,6 @@ public class StorefrontDisplay extends JFrame {
 		productContainer.setBorder(new EmptyBorder(10, 20, 0, 10));
 
 		getContentPane().add(productContainer, BorderLayout.WEST);
-
-		LayoutManager itemContainerLayout = new GridLayout(0, 3, 50, 5); // layout dimensions
 
 		JPanel beverageContainer = createBeverageContainer();
 		productContainer.add(beverageContainer);
@@ -139,17 +127,17 @@ public class StorefrontDisplay extends JFrame {
 		RoundedPanel roundedInnerPanel = createRoundedPanel(containerWidth, cornerRadius, outlineColor, outlineWidth);
 		roundedInnerPanel.setLayout(new BoxLayout(roundedInnerPanel, BoxLayout.Y_AXIS));
 
-		cartItemPanel(containerWidth, cornerRadius, outlineColor, outlineWidth);
-		roundedInnerPanel.add(cartItemsPanel);
+		JPanel cartItemPanel = ShoppingCart.cartItemPanel(containerWidth, cornerRadius, outlineColor, outlineWidth);
+		roundedInnerPanel.add(cartItemPanel);
 
-		totalLabel(containerWidth);
+		totalLabel = ShoppingCart.totalLabel(containerWidth);
 		roundedInnerPanel.add(totalLabel);
 
 		cartContainer.add(roundedInnerPanel);
 
 		cartContainer.add(Box.createVerticalStrut(10));
 
-		JButton checkoutBtn = checkoutButton(containerWidth);
+		JButton checkoutBtn = ShoppingCart.checkoutButton(containerWidth);
 		cartContainer.add(checkoutBtn);
 
 		// END SHOPPING CART
@@ -225,59 +213,10 @@ public class StorefrontDisplay extends JFrame {
 		return roundedInnerPanel;
 	}
 
-	/**
-	 * Sets up the panel for displaying items in the shopping cart.
-	 *
-	 * @param containerWidth width of the panel
-	 * @param cornerRadius   corner radius for the panel
-	 * @param outlineColor   color of the outline
-	 * @param outlineWidth   width of the outline
-	 */
-	private void cartItemPanel(int containerWidth, int cornerRadius, Color outlineColor, int outlineWidth) {
-		cartItemsPanel = new RoundedPanel(cornerRadius, outlineColor, outlineWidth);
-		cartItemsPanel.setSize(new Dimension(containerWidth, 800));
-		cartItemsPanel.setOpaque(true);
-		cartItemsPanel.setPreferredSize(new Dimension(containerWidth, 500));
-		cartItemsPanel.setMinimumSize(new Dimension(containerWidth, 500));
-		cartItemsPanel.setMaximumSize(new Dimension(containerWidth, height - 50));
-		cartItemsPanel.setBackground(Color.WHITE);
-		cartItemsPanel.setLayout(new BoxLayout(cartItemsPanel, BoxLayout.Y_AXIS));
-	}
-
-	/**
-	 * Configures and initializes the label displaying the total price of items in
-	 * the cart.
-	 *
-	 * @param containerWidth width of the label
-	 */
-	private void totalLabel(int containerWidth) {
-		totalLabel = new JLabel("Total Price: $0.00 ");
-		totalLabel.setFont(new Font("Arial", Font.BOLD, 18));
-		totalLabel.setOpaque(false);
-		totalLabel.setBackground(Color.RED);
-		totalLabel.setPreferredSize(new Dimension(containerWidth, 30));
-		totalLabel.setMinimumSize(new Dimension(containerWidth, 30));
-		totalLabel.setMaximumSize(new Dimension(containerWidth, 30));
-		totalLabel.setBorder(new EmptyBorder(10, 10, 20, 10));
-	}
-
-	private JButton checkoutButton(int containerWidth) {
-		JButton checkoutBtn = new JButton("Checkout");
-		checkoutBtn.setContentAreaFilled(false);
-		checkoutBtn.setBackground(Color.LIGHT_GRAY);
-		checkoutBtn.setFocusable(false);
-		checkoutBtn.setOpaque(true);
-		checkoutBtn.setPreferredSize(new Dimension(containerWidth, 50));
-		checkoutBtn.setMinimumSize(new Dimension(containerWidth, 50));
-		checkoutBtn.setMaximumSize(new Dimension(containerWidth, 50));
-		return checkoutBtn;
-	}
-
 	private JLabel titleLabel() {
 		JLabel shopTitle = new JLabel("LE BEAN ZONE");
 		shopTitle.setPreferredSize(new Dimension(width, 50));
 		shopTitle.setFont(new Font("Didot", Font.BOLD, 32));
-//		shopTitle.setOpaque(true);
 		shopTitle.setBackground(new Color(100, 10, 0, 100));
 		return shopTitle;
 	}
@@ -340,12 +279,6 @@ public class StorefrontDisplay extends JFrame {
 		productImg.setBorderPainted(false);
 		productImg.setFocusable(false);
 		productImg.setOpaque(true);
-		productImg.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-//				addProductToCart(product);
-				removeProductFromCart(product);
-			}
-		});
 
 		productItem.add(productImg, BorderLayout.CENTER);
 
@@ -366,12 +299,6 @@ public class StorefrontDisplay extends JFrame {
 
 	}
 
-	protected void removeProductFromCart(Product product) {
-		ShoppingCart.removeProduct(product);
-		updateCartDisplay();
-
-	}
-
 	private JButton addToCartButton(Product product) {
 		JButton addToCartBtn = new JButton();
 		addToCartBtn.setOpaque(true);
@@ -381,98 +308,17 @@ public class StorefrontDisplay extends JFrame {
 		addToCartBtn.setFocusPainted(false);
 		addToCartBtn.setOpaque(true);
 		addToCartBtn.setPreferredSize(new Dimension(50, 14));
-//		addToCartBtn.setBorder(new EmptyBorder(10, 0, 10, 0));
 		addToCartBtn.addActionListener(e -> addProductToCart(product));
 		return addToCartBtn;
 	}
 
-//TODO
 	protected void addProductToCart(Product product) {
 		System.out.println();
 		System.out.println("you added " + product.getName() + " to the cart");
 		System.out.println();
 		ShoppingCart.addProduct(product, product.getPrice());
-		updateCartDisplay();
+		ShoppingCart.updateCartDisplay();
 	}
 
-	/**
-	 * Updates the shopping cart display by clearing and repopulating the cart items
-	 * panel with the current products in the cart. For each product, displays the
-	 * product name, quantity, subtotal, and quantity adjustment buttons (plus and
-	 * minus).
-	 * 
-	 * The minus button decreases the product quantity by one, or removes the
-	 * product if quantity reaches zero. The plus button increases the product
-	 * quantity by one. Updates the cart total price after modifying product
-	 * quantities.
-	 */
-	private void updateCartDisplay() {
-		cartItemsPanel.removeAll();
-		for (Product product : ShoppingCart.products) {
-			if (product != null && product.getQty() > 0) {
-				JPanel itemPanel = new JPanel();
-				itemPanel.setLayout(new BorderLayout(0,0));
-				itemPanel.setMaximumSize(new Dimension(400, 25));
-				itemPanel.setBackground(Color.WHITE);
-				itemPanel.setAlignmentX(LEFT_ALIGNMENT);
-				itemPanel.setBorder(new EmptyBorder(0, 0, 0, 0));
-				
-				JLabel itemLabel = new JLabel(
-					product.getName() + " x" + product.getQty() + "     $" + product.getSubtotal());
-				itemLabel.setFont(new Font("Arial", Font.ITALIC, 16));
-				itemLabel.setPreferredSize(new Dimension(125, 25));
-				itemLabel.setMaximumSize(new Dimension(125, 25));
-				itemLabel.setBorder(new EmptyBorder(0, 0, 0, 5));
-				
-				itemPanel.add(itemLabel, BorderLayout.CENTER);
-				
-				JPanel buttonPanel = new JPanel();
-				buttonPanel.setLayout(new BorderLayout());
-				buttonPanel.setAlignmentX(RIGHT_ALIGNMENT);
-				JButton minusButton = new JButton("-");
-				minusButton.setPreferredSize(new Dimension(45, 25));
-				minusButton.setFont(new Font("Arial", Font.BOLD, 12));
-				minusButton.addActionListener(e -> {
-					if (product.getQty() > 1) {
-						product.updateQty(product.getQty() - 1);
-					} else {
-						ShoppingCart.removeProduct(product);
-					}
-					updateCartDisplay();
-					updateCartTotal();
-				});
-				
-				buttonPanel.add(minusButton, BorderLayout.WEST);
-				
-				JButton plusButton = new JButton("+");
-				plusButton.setPreferredSize(new Dimension(45, 25));
-				plusButton.setFont(new Font("Arial", Font.BOLD, 12));
-				plusButton.addActionListener(e -> {
-					product.updateQty(product.getQty() + 1);
-					updateCartDisplay();
-					updateCartTotal();
-				});
-				
-				buttonPanel.add(plusButton, BorderLayout.EAST);
-				itemPanel.add(buttonPanel, BorderLayout.EAST);
-				cartItemsPanel.add(itemPanel);
-			}
-		}
-
-		updateCartTotal();
-		cartItemsPanel.revalidate();
-		cartItemsPanel.repaint();
-	}
-
-	/**
-	 * 
-	 * Updates the total label with the current 
-	 * shopping cart total
-	 * 
-	 */
-	private void updateCartTotal() {
-		double total = ShoppingCart.calculateTotalPrice();
-		totalLabel.setText(String.format("Total Price: $%.2f", total));
-	}
 
 }
