@@ -212,6 +212,10 @@ public class ShoppingCart extends JPanel {
 		return checkoutBtn;
 	}
 
+	/**
+	 * Generates a formated receipt of products in the cart.
+	 * Includes item names, quantities, subtotals, and the total price.
+	 */
 	public static String generateReceipt() {
 		StringBuilder receipt = new StringBuilder();
 		receipt.append("Le Bean Zone\n");

@@ -70,50 +70,7 @@ public class ReceiptPreview extends JPanel {
         totalLabel.setBorder(new EmptyBorder(20, 0, 0, 0));
         receiptPanel.add(totalLabel);
         return receiptPanel; 
-
-  /*      // Add return to cart button
-        JButton returnButton = new JButton("Return to Cart");
-        returnButton.setFont(new Font("Arial", Font.BOLD, 14));
-        returnButton.setAlignmentX(JButton.CENTER_ALIGNMENT);
-       // returnButton.addActionListener(e -> returnToCart());
-        receiptPanel.add(returnButton);
-        */
-
+        
     } 
-
-    //unused method for now. redundant / not needed
-    /*private void returnToCart() {
-        JPanel cartContainer = storefrontDisplay.getCartContainer();
-
-        // Clear the cart container
-        cartContainer.removeAll();
-
-        // Recreate and add the cart item panel
-        JPanel cartItemPanel = ShoppingCart.getCartItemPanel();
-        cartContainer.add(cartItemPanel);
-
-        // Recreate and add the total price label
-        JLabel totalLabel = ShoppingCart.totalLabel(containerWidth);
-        cartContainer.add(totalLabel);
-
-        // Recreate and add the checkout button
-        JButton checkoutBtn = ShoppingCart.checkoutButton(containerWidth);
-        checkoutBtn.addActionListener(e -> {
-            // When checkout is clicked, create the receipt preview
-            ReceiptPreview receiptPreview = new ReceiptPreview(products, containerWidth, storefrontDisplay);
-            JPanel receiptPanel = receiptPreview.createReceiptPanel();
-
-            // Switch to the receipt panel
-            cartContainer.removeAll();
-            cartContainer.add(receiptPanel);
-            cartContainer.revalidate();
-            cartContainer.repaint();
-        });
-        cartContainer.add(checkoutBtn);
-
-        // Refresh the UI
-        cartContainer.revalidate();
-        cartContainer.repaint();
-    }*/
 }
 
