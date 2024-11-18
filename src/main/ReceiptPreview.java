@@ -56,7 +56,7 @@ public class ReceiptPreview extends JPanel {
         for (Product product : products) {
             if (product.getQty() > 0) {
                 JLabel productLabel = new JLabel(
-                        String.format("%s x%d - $%.2f", product.getName(), product.getQty(), product.getSubtotal())
+                		String.format("%s x%d - $%.2f", product.getName(), product.getQty(), product.getSubtotal())
                 );
                 productLabel.setFont(new Font("Arial", Font.PLAIN, 16));
                 receiptPanel.add(productLabel);
