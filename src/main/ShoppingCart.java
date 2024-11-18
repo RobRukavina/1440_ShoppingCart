@@ -15,8 +15,9 @@ import javax.swing.border.EmptyBorder;
 /**
  * Represents the ShoppingCart object which extends JPanel
  * 
- * @author Sam
- * @author #2 Rob
+ * @author #1 Sam Raleigh 
+ * @author #2 Rob Rukavina
+ * @author #3 Michael Evans
  */
 public class ShoppingCart extends JPanel {
 	static JPanel cartItemsPanel;
@@ -81,6 +82,11 @@ public class ShoppingCart extends JPanel {
 		cartItemsPanel.setLayout(new BoxLayout(cartItemsPanel, BoxLayout.Y_AXIS));
 		return cartItemsPanel;
 	}
+	
+	public static JPanel getCartItemPanel() {
+	    return cartItemsPanel;
+	}
+
 	
 	/**
 	 * Updates the shopping cart display by clearing and repopulating the cart items
