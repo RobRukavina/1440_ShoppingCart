@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
@@ -202,7 +203,13 @@ public class ShoppingCart extends JPanel {
 		checkoutBtn.setPreferredSize(new Dimension(containerWidth, 50));
 		checkoutBtn.setMinimumSize(new Dimension(containerWidth, 50));
 		checkoutBtn.setMaximumSize(new Dimension(containerWidth, 50));
-        checkoutBtn.addActionListener(e -> generateReceipt());
+		checkoutBtn.addActionListener(e -> {
+	        // Generate the receipt string
+	        String receipt = ShoppingCart.generateReceipt();
+	        
+	        // Show the receipt in a message dialog
+	        JOptionPane.showMessageDialog(null, receipt, "Receipt", JOptionPane.INFORMATION_MESSAGE);
+	    });
 		return checkoutBtn;
 	}
 	
