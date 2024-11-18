@@ -60,13 +60,13 @@ public class ReceiptPreview extends JPanel {
         JButton returnButton = new JButton("Return to Cart");
         returnButton.setFont(new Font("Arial", Font.BOLD, 14));
         returnButton.setAlignmentX(JButton.CENTER_ALIGNMENT);
-        //returnButton.addActionListener(e -> returnToCart());
+        returnButton.addActionListener(e -> returnToCart());
         receiptPanel.add(returnButton);
         
 		return receiptPanel;
 }
 	
-	private void onReturnToCart() {
+	private void returnToCart() {
 		JPanel cartContainer = storefrontDisplay.getCartContainer();
 		
 	    // Clear the cart container

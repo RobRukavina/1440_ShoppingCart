@@ -202,8 +202,22 @@ public class ShoppingCart extends JPanel {
 		checkoutBtn.setPreferredSize(new Dimension(containerWidth, 50));
 		checkoutBtn.setMinimumSize(new Dimension(containerWidth, 50));
 		checkoutBtn.setMaximumSize(new Dimension(containerWidth, 50));
+        checkoutBtn.addActionListener(e -> generateReceipt());
 		return checkoutBtn;
 	}
+	
+	public static String generateReceipt() {
+	    StringBuilder receipt = new StringBuilder();
+	    receipt.append("Receipt\n");
+	    receipt.append("========================\n");
+	    for (Product product : products) {
+	        receipt.append(String.format("%s x%d - $%.2f\n", product.getName(), product.getQty(), product.getSubtotal()));
+	    }
+	    receipt.append("========================\n");
+	    receipt.append(String.format("Total: $%.2f\n", calculateTotalPrice()));
+	    return receipt.toString();
+	}
+
 	
 	/**
 	 * Total price of all the items in cart
