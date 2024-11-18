@@ -215,7 +215,8 @@ public class ShoppingCart extends JPanel {
 	
 	public static String generateReceipt() {
 	    StringBuilder receipt = new StringBuilder();
-	    receipt.append("Receipt\n");
+	    receipt.append("Le Bean Zone\n");
+	    receipt.append("Barista: Chan\n");
 	    receipt.append("========================\n");
 	    for (Product product : products) {
 	        receipt.append(String.format("%s x%d - $%.2f\n", product.getName(), product.getQty(), product.getSubtotal()));
