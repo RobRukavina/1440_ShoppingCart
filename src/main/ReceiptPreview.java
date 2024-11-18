@@ -20,12 +20,26 @@ public class ReceiptPreview extends JPanel {
     private int containerWidth;
     private StorefrontDisplay storefrontDisplay;
 
+    /**
+     * Constructs a new ReceiptPreview object with the given parameters.
+     *
+     * @param products        List of products in the shopping cart
+     * @param containerWidth  Width of the container to fit the receipt preview
+     * @param storefrontDisplay Reference to the storefront display for navigation
+     */
     public ReceiptPreview(List<Product> products, int containerWidth, StorefrontDisplay storefrontDisplay) {
         this.products = products;
         this.containerWidth = containerWidth;
         this.storefrontDisplay = storefrontDisplay;
     }
 
+    /**
+     * Creates and returns a JPanel displaying the receipt preview.
+     * The receipt includes product names, quantities, subtotals, total price,
+     * and a button to return to the shopping cart.
+     *
+     * @return JPanel displaying the receipt preview
+     */
     public JPanel createReceiptPanel() {
         JPanel receiptPanel = new JPanel();
         receiptPanel.setLayout(new BoxLayout(receiptPanel, BoxLayout.Y_AXIS));
@@ -55,18 +69,20 @@ public class ReceiptPreview extends JPanel {
         totalLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         totalLabel.setBorder(new EmptyBorder(20, 0, 0, 0));
         receiptPanel.add(totalLabel);
+        return receiptPanel; 
 
-        // Add return to cart button
+  /*      // Add return to cart button
         JButton returnButton = new JButton("Return to Cart");
         returnButton.setFont(new Font("Arial", Font.BOLD, 14));
         returnButton.setAlignmentX(JButton.CENTER_ALIGNMENT);
-        returnButton.addActionListener(e -> returnToCart());  // Ensures the user can go back to the cart
+       // returnButton.addActionListener(e -> returnToCart());
         receiptPanel.add(returnButton);
+        */
 
-        return receiptPanel;
-    }
+    } 
 
-    private void returnToCart() {
+    //unused method for now. redundant / not needed
+    /*private void returnToCart() {
         JPanel cartContainer = storefrontDisplay.getCartContainer();
 
         // Clear the cart container
@@ -98,6 +114,6 @@ public class ReceiptPreview extends JPanel {
         // Refresh the UI
         cartContainer.revalidate();
         cartContainer.repaint();
-    }
+    }*/
 }
 
