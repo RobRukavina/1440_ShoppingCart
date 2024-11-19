@@ -64,7 +64,6 @@ public class ShoppingCart extends JPanel {
 		if (product.getQty() > 0) {
 			product.updateQty(product.getQty() - 1);
 		}
-		}
 		printProducts();
 	}
 
@@ -122,7 +121,6 @@ public class ShoppingCart extends JPanel {
 
 
 				JLabel itemLabel = new JLabel(
-						product.getName() + " x" + product.getQty() + "     $" + product.getSubtotal());
 						product.getName() + " x" + product.getQty() + "     $" + product.getSubtotal());
 				itemLabel.setFont(new Font("Arial", Font.ITALIC, 16));
 				itemLabel.setPreferredSize(new Dimension(125, 25));
