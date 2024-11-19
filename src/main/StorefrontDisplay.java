@@ -27,6 +27,9 @@ import javax.swing.border.EmptyBorder;
  * that displays products and allows customers to add items to a shopping cart.
  * It includes features for snack and beverage displays, a shopping cart, and
  * checkout functionality.
+ * @author #1 Michael Evans
+ * @author #2 Sam Raleigh
+ * @author #3 Rob Rukavina
  */
 public class StorefrontDisplay extends JFrame {
 
@@ -220,6 +223,15 @@ public class StorefrontDisplay extends JFrame {
 		cartContainer.setPreferredSize(new Dimension(containerWidth, height - 50));
 		cartContainer.setOpaque(false);
 		cartContainer.setBorder(new EmptyBorder(20, 0, 100, 20));
+	}
+	
+	/**
+	 * Returns the shopping cart container panel.
+	 * 
+	 * @return the cart container panel
+	 */
+	public JPanel getCartContainer() {
+	    return cartContainer;
 	}
 
 	/**

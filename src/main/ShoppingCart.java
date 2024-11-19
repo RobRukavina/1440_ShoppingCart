@@ -10,14 +10,16 @@ import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 /**
  * Represents the ShoppingCart object which extends JPanel
  * 
- * @author Sam
- * @author #2 Rob
+ * @author #1 Sam Raleigh
+ * @author #2 Rob Rukavina
+ * @author #3 Michael Evans
  */
 public class ShoppingCart extends JPanel {
 	static JPanel cartItemsPanel;
@@ -52,6 +54,7 @@ public class ShoppingCart extends JPanel {
 		printProducts();
 	}
 
+
 	/**
 	 * Removes a product from the ShoppingCart products array
 	 * 
@@ -61,8 +64,10 @@ public class ShoppingCart extends JPanel {
 		if (product.getQty() > 0) {
 			product.updateQty(product.getQty() - 1);
 		}
+		}
 		printProducts();
 	}
+
 
 	/**
 	 * Sets up the panel for displaying items in the shopping cart.
@@ -88,6 +93,11 @@ public class ShoppingCart extends JPanel {
 		return cartItemsPanel;
 	}
 
+	public static JPanel getCartItemPanel() {
+		return cartItemsPanel;
+	}
+
+
 	/**
 	 * Updates the shopping cart display by clearing and repopulating the cart items
 	 * panel with the current products in the cart. For each product, displays the
@@ -104,20 +114,24 @@ public class ShoppingCart extends JPanel {
 		for (Product product : ShoppingCart.products) {
 			if (product != null && product.getQty() > 0) {
 				JPanel itemPanel = new JPanel();
-				itemPanel.setLayout(new BorderLayout(0, 0));
+				itemPanel.setLayout(new BorderLayout(0,  0));
 				itemPanel.setMaximumSize(new Dimension(400, 25));
 				itemPanel.setBackground(Color.WHITE);
 				itemPanel.setAlignmentX(LEFT_ALIGNMENT);
 				itemPanel.setBorder(new EmptyBorder(0, 0, 0, 0));
 
+
 				JLabel itemLabel = new JLabel(
+						product.getName() + " x" + product.getQty() + "     $" + product.getSubtotal());
 						product.getName() + " x" + product.getQty() + "     $" + product.getSubtotal());
 				itemLabel.setFont(new Font("Arial", Font.ITALIC, 16));
 				itemLabel.setPreferredSize(new Dimension(125, 25));
 				itemLabel.setMaximumSize(new Dimension(125, 25));
 				itemLabel.setBorder(new EmptyBorder(0, 0, 0, 5));
 
+
 				itemPanel.add(itemLabel, BorderLayout.CENTER);
+
 
 				JPanel buttonPanel = new JPanel();
 				buttonPanel.setLayout(new BorderLayout());
@@ -137,7 +151,9 @@ public class ShoppingCart extends JPanel {
 					updateCartTotal();
 				});
 
+
 				buttonPanel.add(minusButton, BorderLayout.WEST);
+
 
 				JButton plusButton = new JButton("+");
 				plusButton.setPreferredSize(new Dimension(45, 25));
@@ -150,6 +166,7 @@ public class ShoppingCart extends JPanel {
 					updateCartTotal();
 				});
 
+
 				buttonPanel.add(plusButton, BorderLayout.EAST);
 				itemPanel.add(buttonPanel, BorderLayout.EAST);
 				cartItemsPanel.add(itemPanel);
@@ -161,8 +178,10 @@ public class ShoppingCart extends JPanel {
 		cartItemsPanel.repaint();
 	}
 
+
 	/**
 	 * 
+	 * Updates the total label with the current shopping cart total
 	 * Updates the total label with the current shopping cart total
 	 * 
 	 */
@@ -171,11 +190,13 @@ public class ShoppingCart extends JPanel {
 		StorefrontDisplay.totalLabel.setText(String.format("Total Price: $%.2f", total));
 	}
 
+
 	/**
 	 * Configures and initializes the label displaying the total price of items in
 	 * the cart.
 	 *
 	 * @param containerWidth width of the label
+	 * @return
 	 * @return
 	 */
 	static JLabel totalLabel(int containerWidth) {
@@ -206,9 +227,36 @@ public class ShoppingCart extends JPanel {
 		checkoutBtn.setPreferredSize(new Dimension(containerWidth, 50)); // was 50
 		checkoutBtn.setMinimumSize(new Dimension(containerWidth, 50));
 		checkoutBtn.setMaximumSize(new Dimension(containerWidth, 50));
+		checkoutBtn.addActionListener(e -> {
+			// Generate the receipt string
+			String receipt = ShoppingCart.generateReceipt();
 
+			// Show the receipt in a message dialog
+			JOptionPane.showMessageDialog(null, receipt, "Receipt", JOptionPane.INFORMATION_MESSAGE);
+		});
 		return checkoutBtn;
 	}
+
+	/**
+	 * Generates a formated receipt of products in the cart.
+	 * Includes item names, quantities, subtotals, and the total price.
+	 */
+	public static String generateReceipt() {
+		StringBuilder receipt = new StringBuilder();
+		receipt.append("Le Bean Zone\n");
+		receipt.append("Barista: Chan\n");
+		receipt.append("========================\n");
+		for (Product product : products) {
+			if (product.getQty() > 0) {
+				receipt.append(
+				String.format("%s x%d - $%.2f\n", product.getName(), product.getQty(), product.getSubtotal()));
+			}
+		}
+		receipt.append("========================\n");
+		receipt.append(String.format("Total: $%.2f\n", calculateTotalPrice()));
+		return receipt.toString();
+	}
+
 
 	/**
 	 * Total price of all the items in cart
