@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.util.ArrayList;
 
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -50,7 +51,7 @@ public class ShoppingCart extends JPanel {
 
 		printProducts();
 	}
-	
+
 	/**
 	 * Removes a product from the ShoppingCart products array
 	 * 
@@ -59,9 +60,10 @@ public class ShoppingCart extends JPanel {
 	public static void removeProduct(Product product) {
 		if (product.getQty() > 0) {
 			product.updateQty(product.getQty() - 1);
-		}	
+		}
 		printProducts();
 	}
+
 	/**
 	 * Sets up the panel for displaying items in the shopping cart.
 	 *
@@ -70,18 +72,22 @@ public class ShoppingCart extends JPanel {
 	 * @param outlineColor   color of the outline
 	 * @param outlineWidth   width of the outline
 	 */
-	static JPanel cartItemPanel(int containerWidth, int cornerRadius, Color outlineColor, int outlineWidth) {
-		cartItemsPanel = new RoundedPanel(cornerRadius, outlineColor, outlineWidth);
+	static JPanel cartItemPanel(int containerWidth, Color bgColor, int cornerRadius, Color outlineColor,
+			int outlineWidth) {
+		cartItemsPanel = new RoundedPanel(cornerRadius, bgColor, outlineColor, outlineWidth);
 		cartItemsPanel.setSize(new Dimension(containerWidth, 800));
 		cartItemsPanel.setOpaque(true);
 		cartItemsPanel.setPreferredSize(new Dimension(containerWidth, 500));
 		cartItemsPanel.setMinimumSize(new Dimension(containerWidth, 500));
 		cartItemsPanel.setMaximumSize(new Dimension(containerWidth, 750));
 		cartItemsPanel.setBackground(Color.WHITE);
+		cartItemsPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
+
 		cartItemsPanel.setLayout(new BoxLayout(cartItemsPanel, BoxLayout.Y_AXIS));
+
 		return cartItemsPanel;
 	}
-	
+
 	/**
 	 * Updates the shopping cart display by clearing and repopulating the cart items
 	 * panel with the current products in the cart. For each product, displays the
@@ -98,26 +104,28 @@ public class ShoppingCart extends JPanel {
 		for (Product product : ShoppingCart.products) {
 			if (product != null && product.getQty() > 0) {
 				JPanel itemPanel = new JPanel();
-				itemPanel.setLayout(new BorderLayout(0,0));
+				itemPanel.setLayout(new BorderLayout(0, 0));
 				itemPanel.setMaximumSize(new Dimension(400, 25));
 				itemPanel.setBackground(Color.WHITE);
 				itemPanel.setAlignmentX(LEFT_ALIGNMENT);
 				itemPanel.setBorder(new EmptyBorder(0, 0, 0, 0));
-				
+
 				JLabel itemLabel = new JLabel(
-					product.getName() + " x" + product.getQty() + "     $" + product.getSubtotal());
+						product.getName() + " x" + product.getQty() + "     $" + product.getSubtotal());
 				itemLabel.setFont(new Font("Arial", Font.ITALIC, 16));
 				itemLabel.setPreferredSize(new Dimension(125, 25));
 				itemLabel.setMaximumSize(new Dimension(125, 25));
 				itemLabel.setBorder(new EmptyBorder(0, 0, 0, 5));
-				
+
 				itemPanel.add(itemLabel, BorderLayout.CENTER);
-				
+
 				JPanel buttonPanel = new JPanel();
 				buttonPanel.setLayout(new BorderLayout());
 				buttonPanel.setAlignmentX(RIGHT_ALIGNMENT);
 				JButton minusButton = new JButton("-");
 				minusButton.setPreferredSize(new Dimension(45, 25));
+				minusButton.setBackground(Color.WHITE);
+				minusButton.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
 				minusButton.setFont(new Font("Arial", Font.BOLD, 12));
 				minusButton.addActionListener(e -> {
 					if (product.getQty() > 1) {
@@ -128,18 +136,20 @@ public class ShoppingCart extends JPanel {
 					updateCartDisplay();
 					updateCartTotal();
 				});
-				
+
 				buttonPanel.add(minusButton, BorderLayout.WEST);
-				
+
 				JButton plusButton = new JButton("+");
 				plusButton.setPreferredSize(new Dimension(45, 25));
 				plusButton.setFont(new Font("Arial", Font.BOLD, 12));
+				plusButton.setBackground(Color.WHITE);
+				plusButton.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
 				plusButton.addActionListener(e -> {
 					product.updateQty(product.getQty() + 1);
 					updateCartDisplay();
 					updateCartTotal();
 				});
-				
+
 				buttonPanel.add(plusButton, BorderLayout.EAST);
 				itemPanel.add(buttonPanel, BorderLayout.EAST);
 				cartItemsPanel.add(itemPanel);
@@ -150,30 +160,28 @@ public class ShoppingCart extends JPanel {
 		cartItemsPanel.revalidate();
 		cartItemsPanel.repaint();
 	}
-	
+
 	/**
 	 * 
-	 * Updates the total label with the current 
-	 * shopping cart total
+	 * Updates the total label with the current shopping cart total
 	 * 
 	 */
 	private static void updateCartTotal() {
 		double total = ShoppingCart.calculateTotalPrice();
 		StorefrontDisplay.totalLabel.setText(String.format("Total Price: $%.2f", total));
 	}
-	
+
 	/**
 	 * Configures and initializes the label displaying the total price of items in
 	 * the cart.
 	 *
 	 * @param containerWidth width of the label
-	 * @return 
+	 * @return
 	 */
 	static JLabel totalLabel(int containerWidth) {
 		totalLabel = new JLabel("Total Price: $0.00 ");
 		totalLabel.setFont(new Font("Arial", Font.BOLD, 18));
 		totalLabel.setOpaque(false);
-		totalLabel.setBackground(Color.RED);
 		totalLabel.setPreferredSize(new Dimension(containerWidth, 30));
 		totalLabel.setMinimumSize(new Dimension(containerWidth, 30));
 		totalLabel.setMaximumSize(new Dimension(containerWidth, 30));
@@ -190,15 +198,18 @@ public class ShoppingCart extends JPanel {
 	static JButton checkoutButton(int containerWidth) {
 		JButton checkoutBtn = new JButton("Checkout");
 		checkoutBtn.setContentAreaFilled(false);
-		checkoutBtn.setBackground(Color.LIGHT_GRAY);
+		checkoutBtn.setFont(new Font("Arial", Font.PLAIN, 18));
+		checkoutBtn.setForeground(Color.BLACK);
 		checkoutBtn.setFocusable(false);
-		checkoutBtn.setOpaque(true);
-		checkoutBtn.setPreferredSize(new Dimension(containerWidth, 50));
+		checkoutBtn.setOpaque(false);
+		checkoutBtn.setBorderPainted(false);
+		checkoutBtn.setPreferredSize(new Dimension(containerWidth, 50)); // was 50
 		checkoutBtn.setMinimumSize(new Dimension(containerWidth, 50));
 		checkoutBtn.setMaximumSize(new Dimension(containerWidth, 50));
+
 		return checkoutBtn;
 	}
-	
+
 	/**
 	 * Total price of all the items in cart
 	 */

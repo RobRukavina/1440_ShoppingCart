@@ -11,14 +11,17 @@ import javax.swing.JPanel;
 public class RoundedPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private int cornerRadius;
+	private Color bgColor;
 	private Color borderColor;
 	private int borderWidth;
 
-	public RoundedPanel(int radius, Color borderColor, int borderWidth) {
+	public RoundedPanel(int radius, Color bgColor, Color borderColor, int borderWidth) {
 		this.cornerRadius = radius;
+		this.bgColor = bgColor;
 		this.borderColor = borderColor;
 		this.borderWidth = borderWidth;
-		setOpaque(false); // Make the panel transparent for custom painting
+		setOpaque(false);
+
 	}
 
 	@Override
@@ -28,7 +31,7 @@ public class RoundedPanel extends JPanel {
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
 		// Draw the background with rounded corners
-		g2.setColor(getBackground());
+		g2.setColor(bgColor);
 		g2.fillRoundRect(borderWidth, borderWidth, getWidth() - 2 * borderWidth, getHeight() - 2 * borderWidth,
 				cornerRadius, cornerRadius);
 

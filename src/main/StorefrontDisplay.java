@@ -18,6 +18,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
 
 /**
@@ -38,6 +40,8 @@ public class StorefrontDisplay extends JFrame {
 
 	private int containerWidth = (int) (width * 0.27);
 	private int cornerRadius = 10;
+	private Color bgColor = Color.WHITE;
+
 	private Color outlineColor = null;
 	private int outlineWidth = 0;
 
@@ -62,6 +66,24 @@ public class StorefrontDisplay extends JFrame {
 	 */
 	public StorefrontDisplay() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+		// SET UI DEFAULT STYLE TO A CROSS COMPATIBLE STYLE
+
+		try {
+			UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InstantiationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnsupportedLookAndFeelException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		setMinimumSize(new Dimension(width, height));
 
@@ -124,10 +146,12 @@ public class StorefrontDisplay extends JFrame {
 		getContentPane().add(cartContainer, BorderLayout.EAST);
 		cartContainer.setLayout(new BoxLayout(cartContainer, BoxLayout.Y_AXIS));
 
-		RoundedPanel roundedInnerPanel = createRoundedPanel(containerWidth, cornerRadius, outlineColor, outlineWidth);
+		RoundedPanel roundedInnerPanel = createRoundedPanel(containerWidth, cornerRadius, bgColor, outlineColor,
+				outlineWidth);
 		roundedInnerPanel.setLayout(new BoxLayout(roundedInnerPanel, BoxLayout.Y_AXIS));
 
-		JPanel cartItemPanel = ShoppingCart.cartItemPanel(containerWidth, cornerRadius, outlineColor, outlineWidth);
+		JPanel cartItemPanel = ShoppingCart.cartItemPanel(containerWidth, bgColor, cornerRadius, outlineColor,
+				outlineWidth);
 		roundedInnerPanel.add(cartItemPanel);
 
 		totalLabel = ShoppingCart.totalLabel(containerWidth);
@@ -138,7 +162,11 @@ public class StorefrontDisplay extends JFrame {
 		cartContainer.add(Box.createVerticalStrut(10));
 
 		JButton checkoutBtn = ShoppingCart.checkoutButton(containerWidth);
-		cartContainer.add(checkoutBtn);
+
+		RoundedPanel roundedBtn = createRoundedButton(containerWidth, cornerRadius, Color.WHITE, Color.BLACK, 1);
+		roundedBtn.add(checkoutBtn);
+		roundedBtn.setLayout(new BoxLayout(roundedBtn, BoxLayout.Y_AXIS));
+		cartContainer.add(roundedBtn);
 
 		// END SHOPPING CART
 
@@ -190,7 +218,7 @@ public class StorefrontDisplay extends JFrame {
 		cartContainer = new JPanel();
 
 		cartContainer.setPreferredSize(new Dimension(containerWidth, height - 50));
-
+		cartContainer.setOpaque(false);
 		cartContainer.setBorder(new EmptyBorder(20, 0, 100, 20));
 	}
 
@@ -204,13 +232,22 @@ public class StorefrontDisplay extends JFrame {
 	 * @param outlineWidth   width of the outline
 	 * @return rounded panel
 	 */
-	private RoundedPanel createRoundedPanel(int containerWidth, int cornerRadius, Color outlineColor,
+	private RoundedPanel createRoundedPanel(int containerWidth, int cornerRadius, Color bgColor, Color outlineColor,
 			int outlineWidth) {
-		RoundedPanel roundedInnerPanel = new RoundedPanel(cornerRadius, outlineColor, outlineWidth);
+		RoundedPanel roundedInnerPanel = new RoundedPanel(cornerRadius, bgColor, outlineColor, outlineWidth);
 		roundedInnerPanel.setBackground(Color.WHITE);
 		roundedInnerPanel.setPreferredSize(new Dimension(containerWidth, height - 150));
 		roundedInnerPanel.setMinimumSize(new Dimension(containerWidth, height - 150));
 		return roundedInnerPanel;
+	}
+
+	private RoundedPanel createRoundedButton(int containerWidth, int cornerRadius, Color bgColor, Color outlineColor,
+			int outlineWidth) {
+		RoundedPanel roundedButton = new RoundedPanel(cornerRadius, bgColor, outlineColor, outlineWidth);
+		roundedButton.setPreferredSize(new Dimension(containerWidth, 50));
+		roundedButton.setMinimumSize(new Dimension(containerWidth, 50));
+
+		return roundedButton;
 	}
 
 	private JLabel titleLabel() {
@@ -275,7 +312,7 @@ public class StorefrontDisplay extends JFrame {
 		JButton productImg = new JButton();
 		productImg.setIcon(new ImageIcon(imgPath));
 		productImg.setContentAreaFilled(false);
-		productImg.setBackground(Color.LIGHT_GRAY);
+		productImg.setBackground(Color.WHITE);
 		productImg.setBorderPainted(false);
 		productImg.setFocusable(false);
 		productImg.setOpaque(true);
@@ -319,6 +356,5 @@ public class StorefrontDisplay extends JFrame {
 		ShoppingCart.addProduct(product, product.getPrice());
 		ShoppingCart.updateCartDisplay();
 	}
-
 
 }
