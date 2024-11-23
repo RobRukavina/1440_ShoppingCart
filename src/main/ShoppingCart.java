@@ -241,7 +241,7 @@ public class ShoppingCart extends JPanel {
 	 */
 	public static String generateReceipt() {
 		StringBuilder receipt = new StringBuilder();
-		receipt.append("Le Bean Zone\n");
+		receipt.append("Le Bean Zone Coffee\n");
 		receipt.append("Barista: Chan\n");
 		receipt.append("========================\n");
 		for (Product product : products) {
@@ -252,6 +252,9 @@ public class ShoppingCart extends JPanel {
 		}
 		receipt.append("========================\n");
 		receipt.append(String.format("Total: $%.2f\n", calculateTotalPrice()));
+		receipt.append("========================\n");
+		receipt.append("Wi-Fi: hotbeanjuice37\n");
+		receipt.append("Thank You!");
 		return receipt.toString();
 	}
 
