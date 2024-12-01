@@ -4,6 +4,10 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
@@ -26,6 +30,7 @@ public class ShoppingCart extends JPanel {
 	static JLabel totalLabel;
 	private static final long serialVersionUID = 1L;
 	public static ArrayList<Product> products = new ArrayList<Product>();
+	public static int receiptsCreated = 0;
 
 	/**
 	 * Adds a product to the ShoppingCart products array
@@ -231,6 +236,10 @@ public class ShoppingCart extends JPanel {
 
 			// Show the receipt in a message dialog
 			JOptionPane.showMessageDialog(null, receipt, "Receipt", JOptionPane.INFORMATION_MESSAGE);
+			products.removeAll(products);
+			cartItemsPanel.removeAll();
+			cartItemsPanel.repaint();
+			updateCartTotal();
 		});
 		return checkoutBtn;
 	}
@@ -238,20 +247,36 @@ public class ShoppingCart extends JPanel {
 	/**
 	 * Generates a formated receipt of products in the cart.
 	 * Includes item names, quantities, subtotals, and the total price.
+	 * Also writes reciepts to files stored in the records folder.
 	 */
 	public static String generateReceipt() {
 		StringBuilder receipt = new StringBuilder();
+		StringBuilder sb = new StringBuilder();
+		File file = new File("src/records/receipt" + (ShoppingCart.receiptsCreated == 0 ? "" : ShoppingCart.receiptsCreated) +".txt");
+        
 		receipt.append("Le Bean Zone\n");
 		receipt.append("Barista: Chan\n");
 		receipt.append("========================\n");
-		for (Product product : products) {
-			if (product.getQty() > 0) {
-				receipt.append(
-				String.format("%s x%d - $%.2f\n", product.getName(), product.getQty(), product.getSubtotal()));
+		try(PrintWriter pw = new PrintWriter(new FileWriter(file))){
+			for (Product product : products) {
+				if (product.getQty() > 0) {
+					receipt.append(
+							String.format("%s x%d - $%.2f\n", product.getName(), product.getQty(), product.getSubtotal())
+					);
+					sb.append(
+							String.format("%s, %d, %.2f\n", product.getName(), product.getQty(), product.getSubtotal())
+					);
+				}
 			}
+			sb.append(String.format("Total, %.2f\n", calculateTotalPrice()));
+			pw.println(sb.toString());
+		} catch(Exception e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
 		}
 		receipt.append("========================\n");
 		receipt.append(String.format("Total: $%.2f\n", calculateTotalPrice()));
+		receiptsCreated++;
 		return receipt.toString();
 	}
 

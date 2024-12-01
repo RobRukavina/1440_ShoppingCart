@@ -16,7 +16,8 @@ import javax.swing.border.EmptyBorder;
  * @author Sam Raleigh
  */
 public class ReceiptPreview extends JPanel {
-    private List<Product> products;
+	private static final long serialVersionUID = 7268338721197873103L;
+	private List<Product> products;
     private int containerWidth;
     private StorefrontDisplay storefrontDisplay;
 

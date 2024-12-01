@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.event.WindowListener;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -68,10 +69,9 @@ public class StorefrontDisplay extends JFrame {
 	 * Create the frame.
 	 */
 	public StorefrontDisplay() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+//		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		// SET UI DEFAULT STYLE TO A CROSS COMPATIBLE STYLE
-
+		addWindowListener(new LeBeanWindowListener());
 		try {
 			UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
 		} catch (ClassNotFoundException e) {
