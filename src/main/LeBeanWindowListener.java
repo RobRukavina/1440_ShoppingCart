@@ -27,56 +27,58 @@ public class LeBeanWindowListener implements WindowListener{
 	    	    }
 	    	});
 	    	
-	    	// Show daily report
-	    	for(File fi : matchingFiles) {
-	    		try(Scanner scnr = new Scanner(new File(fi.toString()))){
-	    			while(scnr.hasNext()) {
-	    				String line = scnr.nextLine();
-	    				
-	    				if(line.startsWith("Total")) {
-	    					String[] fields = line.split(",");
-	    					total += Double.parseDouble(fields[1]);
-	    					
-	    				} else {
-	    					sb.append(line + "\n");	    					
-	    				} 
-	    			}
-	    		} catch(Exception ex) {
-	    			System.out.println(ex.getMessage());
-	    			ex.printStackTrace();
-	    		}
-	    	}
-
-	    	sb.append(String.format("%s: %.2f","Total", total));
-	    	
-	    	// Print Report to records folder
-	    	LocalDateTime now = LocalDateTime.now();
+	    	if(matchingFiles.length > 0) {
+	    		// Show daily report
+		    	for(File fi : matchingFiles) {
+		    		try(Scanner scnr = new Scanner(new File(fi.toString()))){
+		    			while(scnr.hasNext()) {
+		    				String line = scnr.nextLine();
+		    				
+		    				if(line.startsWith("Total")) {
+		    					String[] fields = line.split(",");
+		    					total += Double.parseDouble(fields[1]);
+		    					
+		    				} else {
+		    					sb.append(line + "\n");	    					
+		    				} 
+		    			}
+		    		} catch(Exception ex) {
+		    			System.out.println(ex.getMessage());
+		    			ex.printStackTrace();
+		    		}
+		    	}
 	
-	        // Get dateTime for fileName
-	        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-	        String fdt = now.format(formatter).replaceAll(":", "_").replace(" ", ",");
+		    	sb.append(String.format("%s: %.2f","Total", total));
+		    	
+		    	// Print Report to records folder
+		    	LocalDateTime now = LocalDateTime.now();
+		
+		        // Get dateTime for fileName
+		        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		        String fdt = now.format(formatter).replaceAll(":", "_").replace(" ", ",");
 	        
-	    	try(PrintWriter pw = new PrintWriter(new File("src/records/DailyReport_" + fdt + ".csv"))){
-	    		pw.print(sb);
-	    	} catch(Exception ex) {
-	    		System.out.println(ex.getMessage());
-	    		ex.printStackTrace();
-	    	}
+	        	try(PrintWriter pw = new PrintWriter(new File("src/records/DailyReport_" + fdt + ".csv"))){
+		    		pw.print(sb);
+		    	} catch(Exception ex) {
+		    		System.out.println(ex.getMessage());
+		    		ex.printStackTrace();
+		    	}
+		    	
+		    	JOptionPane.showMessageDialog(null, sb, "Daily Report", JOptionPane.INFORMATION_MESSAGE);
+		    	System.out.println("Showing Report");	
 	    	
-	    	JOptionPane.showMessageDialog(null, sb, "Daily Report", JOptionPane.INFORMATION_MESSAGE);
-	    	System.out.println("Showing Report");
-	    	
-	    	// Remove all old receipts
-	    	try {
-	    		for(File file : matchingFiles) {
-	    			file.delete();
-	    		}
-
-		        System.out.println("Cleanup complete, application closing");
-	    	
-	    	} catch(Exception ex) {
-	    		System.out.println(ex.getMessage());
-	    		ex.printStackTrace();
+		    	// Remove all old receipts
+		    	try {
+		    		for(File file : matchingFiles) {
+		    			file.delete();
+		    		}
+	
+			        System.out.println("Cleanup complete, application closing");
+		    	
+		    	} catch(Exception ex) {
+		    		System.out.println(ex.getMessage());
+		    		ex.printStackTrace();
+		    	}
 	    	}
 	    }
 

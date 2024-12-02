@@ -12,7 +12,6 @@ public class Product {
 	private final double price;
 	private double subtotal;
 	private int stock;
-	// TODO change to type ImageIcon
 	private String image;
 
 	public Product(String name, String image, double price, int stock) {

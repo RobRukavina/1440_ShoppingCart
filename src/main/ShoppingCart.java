@@ -5,9 +5,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
@@ -55,8 +52,6 @@ public class ShoppingCart extends JPanel {
 			product.updateQty(product.getQty() + 1);
 			System.out.println(product.getQty());
 		}
-
-		printProducts();
 	}
 
 
@@ -69,7 +64,6 @@ public class ShoppingCart extends JPanel {
 		if (product.getQty() > 0) {
 			product.updateQty(product.getQty() - 1);
 		}
-		printProducts();
 	}
 
 
@@ -185,7 +179,6 @@ public class ShoppingCart extends JPanel {
 	/**
 	 * 
 	 * Updates the total label with the current shopping cart total
-	 * Updates the total label with the current shopping cart total
 	 * 
 	 */
 	private static void updateCartTotal() {
@@ -293,16 +286,4 @@ public class ShoppingCart extends JPanel {
 
 		return totalPrice;
 	}
-
-	// TODO TESTING -- Method to print the current product array -- TESTING
-	private static void printProducts() {
-		System.out.println("Current Products in Cart:");
-		for (int i = 0; i < products.size(); i++) {
-			System.out.println(products.get(i).getName() + "  " + products.get(i).getQty() + "  - $"
-					+ products.get(i).getPrice() + "  -  $" + products.get(i).getSubtotal());
-		}
-
-		System.out.println("TOTAL PRICE: " + String.format("%.2f", calculateTotalPrice()));
-	}
-
 }

@@ -6,7 +6,6 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.GridLayout;
-import java.awt.event.WindowListener;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +19,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
 
 /**
@@ -34,8 +32,7 @@ import javax.swing.border.EmptyBorder;
  */
 public class StorefrontDisplay extends JFrame {
 
-	private static final long serialVersionUID = 1L;
-
+	private static final long serialVersionUID = 2589156307884913414L;
 	private List<Product> products;
 	private final int width = 1200;
 	private final int height = 800;
@@ -69,22 +66,11 @@ public class StorefrontDisplay extends JFrame {
 	 * Create the frame.
 	 */
 	public StorefrontDisplay() {
-//		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		// SET UI DEFAULT STYLE TO A CROSS COMPATIBLE STYLE
 		addWindowListener(new LeBeanWindowListener());
 		try {
 			UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (UnsupportedLookAndFeelException e) {
-			// TODO Auto-generated catch block
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
@@ -171,16 +157,6 @@ public class StorefrontDisplay extends JFrame {
 		roundedBtn.setLayout(new BoxLayout(roundedBtn, BoxLayout.Y_AXIS));
 		cartContainer.add(roundedBtn);
 
-		// END SHOPPING CART
-
-		// TODO add a background to the contentPane - make this work
-//		StorefrontBackground bgPanel = new StorefrontBackground();
-//		bgPanel.setLayout(null);
-//		bgPanel.setBounds(0, 0, getWidth(), getHeight()); // Fill the frame
-//		bgPanel.setOpaque(true);
-//
-//		getContentPane().add(bgPanel);// set bg
-
 		pack();
 		setVisible(true);
 
@@ -190,7 +166,6 @@ public class StorefrontDisplay extends JFrame {
 	 * Populates the available products list with predefined products.
 	 */
 	private void productsAvailable() {
-		// Example product data
 		products = new ArrayList<>();
 
 		// Snacks
@@ -199,7 +174,7 @@ public class StorefrontDisplay extends JFrame {
 		products.add(new Snack("Choccy Muffin", "chocolatemuffin.png", 4.99, 10));
 		products.add(new Snack("Croissant", "croissant.png", 3.99, 18));
 		products.add(new Snack("Paninini", "panini.png", 6.49, 14));
-		// TODO lets add a cinnamon roll
+		products.add(new Snack("Le CinnaBean", "cinBun.png", 3.49, 6));
 
 		// Beverages
 		products.add(new Beverage("Boba Milk Tea", "bobatea.png", 4.49, 12, 16));
@@ -207,9 +182,7 @@ public class StorefrontDisplay extends JFrame {
 		products.add(new Beverage("Macchiato", "macchiato.png", 4.99, 18, 8));
 		products.add(new Beverage("Black", "black.png", 5.29, 20, 16));
 		products.add(new Beverage("Latte", "cream.png", 3.99, 10, 2));
-		// TODO lets add a cold brew
-//		products.add(new Beverage("Cold Brew", "coldbrew.png", 4.59, 14, 16)); // DOESNT EXIST
-
+		products.add(new Beverage("Le Americano", "americano01.png", 15.99, 10, 16));
 	}
 
 	/**
@@ -219,7 +192,6 @@ public class StorefrontDisplay extends JFrame {
 	 */
 	private void cartContainer(int containerWidth) {
 		cartContainer = new JPanel();
-
 		cartContainer.setPreferredSize(new Dimension(containerWidth, height - 50));
 		cartContainer.setOpaque(false);
 		cartContainer.setBorder(new EmptyBorder(20, 0, 100, 20));
@@ -258,7 +230,6 @@ public class StorefrontDisplay extends JFrame {
 		RoundedPanel roundedButton = new RoundedPanel(cornerRadius, bgColor, outlineColor, outlineWidth);
 		roundedButton.setPreferredSize(new Dimension(containerWidth, 50));
 		roundedButton.setMinimumSize(new Dimension(containerWidth, 50));
-
 		return roundedButton;
 	}
 
@@ -279,7 +250,6 @@ public class StorefrontDisplay extends JFrame {
 	private JLabel beverageLabel() {
 		JLabel beverageLbl = new JLabel("COFFEE");
 		beverageLbl.setFont(new Font("Serif", Font.BOLD, 24));
-
 		return beverageLbl;
 	}
 
@@ -362,9 +332,6 @@ public class StorefrontDisplay extends JFrame {
 	}
 
 	protected void addProductToCart(Product product) {
-		System.out.println();
-		System.out.println("you added " + product.getName() + " to the cart");
-		System.out.println();
 		ShoppingCart.addProduct(product, product.getPrice());
 		ShoppingCart.updateCartDisplay();
 	}
